@@ -8,13 +8,30 @@
 
 /* Begin PBXBuildFile section */
 		3DC73641202D340D00C186EE /* OCSP.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DC73640202D340D00C186EE /* OCSP.h */; };
-		3DC73643202D340D00C186EE /* OCSP.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC73642202D340D00C186EE /* OCSP.m */; };
+		3DC73650202D342500C186EE /* OCSPTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7364F202D342500C186EE /* OCSPTests.m */; };
+		3DC73652202D342500C186EE /* libOCSP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC7363D202D340D00C186EE /* libOCSP.a */; };
+		3DC7365A202D3C5000C186EE /* OCSPChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DC73658202D3C5000C186EE /* OCSPChannel.h */; };
+		3DC7365B202D3C5000C186EE /* OCSPChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC73659202D3C5000C186EE /* OCSPChannel.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3DC73653202D342500C186EE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DC73635202D340D00C186EE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3DC7363C202D340D00C186EE;
+			remoteInfo = OCSP;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		3DC7363D202D340D00C186EE /* libOCSP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOCSP.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DC73640202D340D00C186EE /* OCSP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSP.h; sourceTree = "<group>"; };
-		3DC73642202D340D00C186EE /* OCSP.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSP.m; sourceTree = "<group>"; };
+		3DC7364D202D342500C186EE /* OCSPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OCSPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DC7364F202D342500C186EE /* OCSPTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPTests.m; sourceTree = "<group>"; };
+		3DC73651202D342500C186EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3DC73658202D3C5000C186EE /* OCSPChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPChannel.h; sourceTree = "<group>"; };
+		3DC73659202D3C5000C186EE /* OCSPChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPChannel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -25,6 +42,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3DC7364A202D342500C186EE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DC73652202D342500C186EE /* libOCSP.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -32,6 +57,7 @@
 			isa = PBXGroup;
 			children = (
 				3DC7363F202D340D00C186EE /* OCSP */,
+				3DC7364E202D342500C186EE /* OCSPTests */,
 				3DC7363E202D340D00C186EE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				3DC7363D202D340D00C186EE /* libOCSP.a */,
+				3DC7364D202D342500C186EE /* OCSPTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +75,19 @@
 			isa = PBXGroup;
 			children = (
 				3DC73640202D340D00C186EE /* OCSP.h */,
-				3DC73642202D340D00C186EE /* OCSP.m */,
+				3DC73658202D3C5000C186EE /* OCSPChannel.h */,
+				3DC73659202D3C5000C186EE /* OCSPChannel.m */,
 			);
 			path = OCSP;
+			sourceTree = "<group>";
+		};
+		3DC7364E202D342500C186EE /* OCSPTests */ = {
+			isa = PBXGroup;
+			children = (
+				3DC7364F202D342500C186EE /* OCSPTests.m */,
+				3DC73651202D342500C186EE /* Info.plist */,
+			);
+			path = OCSPTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -61,6 +98,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DC73641202D340D00C186EE /* OCSP.h in Headers */,
+				3DC7365A202D3C5000C186EE /* OCSPChannel.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +122,24 @@
 			productReference = 3DC7363D202D340D00C186EE /* libOCSP.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		3DC7364C202D342500C186EE /* OCSPTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3DC73655202D342500C186EE /* Build configuration list for PBXNativeTarget "OCSPTests" */;
+			buildPhases = (
+				3DC73649202D342500C186EE /* Sources */,
+				3DC7364A202D342500C186EE /* Frameworks */,
+				3DC7364B202D342500C186EE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3DC73654202D342500C186EE /* PBXTargetDependency */,
+			);
+			name = OCSPTests;
+			productName = OCSPTests;
+			productReference = 3DC7364D202D342500C186EE /* OCSPTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -94,6 +150,10 @@
 				ORGANIZATIONNAME = coppercash;
 				TargetAttributes = {
 					3DC7363C202D340D00C186EE = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+					3DC7364C202D342500C186EE = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 					};
@@ -112,20 +172,47 @@
 			projectRoot = "";
 			targets = (
 				3DC7363C202D340D00C186EE /* OCSP */,
+				3DC7364C202D342500C186EE /* OCSPTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3DC7364B202D342500C186EE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3DC73639202D340D00C186EE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DC73643202D340D00C186EE /* OCSP.m in Sources */,
+				3DC7365B202D3C5000C186EE /* OCSPChannel.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DC73649202D342500C186EE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DC73650202D342500C186EE /* OCSPTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3DC73654202D342500C186EE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3DC7363C202D340D00C186EE /* OCSP */;
+			targetProxy = 3DC73653202D342500C186EE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		3DC73644202D340D00C186EE /* Debug */ = {
@@ -249,6 +336,32 @@
 			};
 			name = Release;
 		};
+		3DC73656202D342500C186EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
+				INFOPLIST_FILE = OCSPTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.coppercash.OCSPTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3DC73657202D342500C186EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
+				INFOPLIST_FILE = OCSPTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.coppercash.OCSPTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -266,6 +379,15 @@
 			buildConfigurations = (
 				3DC73647202D340D00C186EE /* Debug */,
 				3DC73648202D340D00C186EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3DC73655202D342500C186EE /* Build configuration list for PBXNativeTarget "OCSPTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DC73656202D342500C186EE /* Debug */,
+				3DC73657202D342500C186EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -6,8 +6,5 @@
 //  Copyright © 2018 coppercash. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <OCSP/OCSPChannel.h>
 
-@interface OCSP : NSObject
-
-@end
