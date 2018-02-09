@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		3DC73641202D340D00C186EE /* OCSP.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DC73640202D340D00C186EE /* OCSP.h */; };
-		3DC73650202D342500C186EE /* OCSPTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7364F202D342500C186EE /* OCSPTests.m */; };
+		3DC73650202D342500C186EE /* OCSPChannelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7364F202D342500C186EE /* OCSPChannelTests.m */; };
 		3DC73652202D342500C186EE /* libOCSP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC7363D202D340D00C186EE /* libOCSP.a */; };
 		3DC7365A202D3C5000C186EE /* OCSPChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DC73658202D3C5000C186EE /* OCSPChannel.h */; };
 		3DC7365B202D3C5000C186EE /* OCSPChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC73659202D3C5000C186EE /* OCSPChannel.m */; };
+		BE857628202E954800BEBD43 /* OCSPAsyncChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */; };
+		BE857629202E954800BEBD43 /* OCSPAsyncChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,10 +30,12 @@
 		3DC7363D202D340D00C186EE /* libOCSP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOCSP.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DC73640202D340D00C186EE /* OCSP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSP.h; sourceTree = "<group>"; };
 		3DC7364D202D342500C186EE /* OCSPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OCSPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3DC7364F202D342500C186EE /* OCSPTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPTests.m; sourceTree = "<group>"; };
+		3DC7364F202D342500C186EE /* OCSPChannelTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPChannelTests.m; sourceTree = "<group>"; };
 		3DC73651202D342500C186EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3DC73658202D3C5000C186EE /* OCSPChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPChannel.h; sourceTree = "<group>"; };
 		3DC73659202D3C5000C186EE /* OCSPChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPChannel.m; sourceTree = "<group>"; };
+		BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncChannel.h; sourceTree = "<group>"; };
+		BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncChannel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,8 @@
 				3DC73640202D340D00C186EE /* OCSP.h */,
 				3DC73658202D3C5000C186EE /* OCSPChannel.h */,
 				3DC73659202D3C5000C186EE /* OCSPChannel.m */,
+				BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */,
+				BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */,
 			);
 			path = OCSP;
 			sourceTree = "<group>";
@@ -84,7 +90,7 @@
 		3DC7364E202D342500C186EE /* OCSPTests */ = {
 			isa = PBXGroup;
 			children = (
-				3DC7364F202D342500C186EE /* OCSPTests.m */,
+				3DC7364F202D342500C186EE /* OCSPChannelTests.m */,
 				3DC73651202D342500C186EE /* Info.plist */,
 			);
 			path = OCSPTests;
@@ -98,6 +104,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DC73641202D340D00C186EE /* OCSP.h in Headers */,
+				BE857628202E954800BEBD43 /* OCSPAsyncChannel.h in Headers */,
 				3DC7365A202D3C5000C186EE /* OCSPChannel.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -193,6 +200,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DC7365B202D3C5000C186EE /* OCSPChannel.m in Sources */,
+				BE857629202E954800BEBD43 /* OCSPAsyncChannel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,7 +208,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DC73650202D342500C186EE /* OCSPTests.m in Sources */,
+				3DC73650202D342500C186EE /* OCSPChannelTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

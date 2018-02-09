@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OCSPChannel<Value : id> : NSObject
-- (BOOL)receive:(Value __autoreleasing *)outValue;
-- (void)receiveIn:(void(^)(Value value, BOOL ok))callback;
+@interface OCSPChannel<Data : id> : NSObject
+- (BOOL)receive:(Data __autoreleasing *)outData;
 @end
 
-@interface OCSPReadWriteChannel<Value : id> : OCSPChannel<Value>
-- (BOOL)send:(Value)value;
-- (void)send:(Value)value
-        with:(void(^)(BOOL ok))callback;
+@interface OCSPReadWriteChannel<Data : id> : OCSPChannel
+- (BOOL)send:(Data)value;
+- (void)close;
 @end
+
+
