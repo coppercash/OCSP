@@ -38,6 +38,7 @@
 		BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncChannel.h; sourceTree = "<group>"; };
 		BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncChannel.m; sourceTree = "<group>"; };
 		BE85762A202E9FAC00BEBD43 /* OCSPAsyncChannelTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncChannelTests.m; sourceTree = "<group>"; };
+		BE85762C202EB49E00BEBD43 /* OCSPShortcut.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPShortcut.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +86,7 @@
 				3DC73659202D3C5000C186EE /* OCSPChannel.m */,
 				BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */,
 				BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */,
+				BE85762C202EB49E00BEBD43 /* OCSPShortcut.h */,
 			);
 			path = OCSP;
 			sourceTree = "<group>";

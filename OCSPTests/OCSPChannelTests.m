@@ -7,7 +7,8 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "OCSP.h"
+#import <OCSP/OCSP.h>
+#import <OCSP/OCSPShortcut.h>
 
 @interface OCSPChannelTests : XCTestCase
 @property (nonatomic, strong) dispatch_queue_t cq;
@@ -28,8 +29,8 @@
     rEx = [self expectationWithDescription:@"recieve"];
     XCTestExpectation *
     sEx = [self expectationWithDescription:@"send"];
-    OCSPReadWriteChannel<NSNumber *> *
-    ch = [[OCSPReadWriteChannel alloc] init];
+    RWChan<NSNumber *> *
+    ch = [[RWChan alloc] init];
     BOOL __block
     sent = NO,
     received = NO;
@@ -57,8 +58,8 @@
     rEx = [self expectationWithDescription:@"recieve"];
     XCTestExpectation *
     sEx = [self expectationWithDescription:@"send"];
-    OCSPReadWriteChannel<NSNumber *> *
-    ch = [[OCSPReadWriteChannel alloc] init];
+    RWChan<NSNumber *> *
+    ch = [[RWChan alloc] init];
     BOOL __block
     sent = NO,
     received = NO;
@@ -82,8 +83,8 @@
 
 - (void)test_rejectSendingsAfterClosing
 {
-    OCSPReadWriteChannel<NSNumber *> *
-    ch = [[OCSPReadWriteChannel alloc] init];
+    RWChan<NSNumber *> *
+    ch = [[RWChan alloc] init];
     [ch close];
     BOOL
     ok = [ch send:@42];
@@ -94,8 +95,8 @@
 {
     XCTestExpectation *
     ex = [self expectationWithDescription:@"send"];
-    OCSPReadWriteChannel<NSNumber *> *
-    ch = [[OCSPReadWriteChannel alloc] init];
+    RWChan<NSNumber *> *
+    ch = [[RWChan alloc] init];
     BOOL __block
     ok = YES;
     dispatch_async(self.cq, ^{
@@ -110,8 +111,8 @@
 
 - (void)test_rejectReceivingsAfterClosing
 {
-    OCSPReadWriteChannel<NSNumber *> *
-    ch = [[OCSPReadWriteChannel alloc] init];
+    RWChan<NSNumber *> *
+    ch = [[RWChan alloc] init];
     [ch close];
     NSNumber *
     value = nil;
@@ -125,8 +126,8 @@
 {
     XCTestExpectation *
     ex = [self expectationWithDescription:@"receive"];
-    OCSPReadWriteChannel<NSNumber *> *
-    ch = [[OCSPReadWriteChannel alloc] init];
+    RWChan<NSNumber *> *
+    ch = [[RWChan alloc] init];
     BOOL __block
     ok = YES;
     NSNumber __block *
@@ -146,13 +147,13 @@
 {
     XCTestExpectation *
     ex = [self expectationWithDescription:@"receive"];
-    OCSPReadWriteChannel<NSNumber *> *
-    ch = [[OCSPReadWriteChannel alloc] init];
+    RWChan<NSNumber *> *
+    ch = [[RWChan alloc] init];
     BOOL __block
     ok = YES;
     NSNumber __block *
     value = nil;
-    OCSPReadWriteChannel<NSNumber *> __weak *
+    RWChan<NSNumber *> __weak *
     p = ch;
     dispatch_async(self.cq, ^{
         ok = [p receive:&value];
@@ -169,8 +170,8 @@
 {
     XCTestExpectation *
     ex = [self expectationWithDescription:@"receive"];
-    OCSPReadWriteChannel<NSNumber *> *
-    ch = [[OCSPReadWriteChannel alloc] init];
+    RWChan<NSNumber *> *
+    ch = [[RWChan alloc] init];
     dispatch_async(self.cq, ^{
         while (
                [ch receive:NULL]

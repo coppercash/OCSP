@@ -9,11 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @interface OCSPChannel<Data : id> : NSObject
-- (BOOL)receive:(Data __autoreleasing *)outData;
+- (BOOL)receive:(Data __nullable __autoreleasing * __nullable)outData;
 @end
 
 @interface OCSPReadWriteChannel<Data : id> : OCSPChannel
-- (BOOL)send:(Data)value;
+- (BOOL)send:(Data __nullable)value;
 - (BOOL)close;
 @end
 

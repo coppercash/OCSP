@@ -9,11 +9,14 @@
 #import "OCSPChannel.h"
 
 @interface OCSPAsyncChannel<Data : id> : OCSPChannel
-- (void)receiveIn:(void(^)(Data data, BOOL ok))callback;
+- (void)receiveWithOn:(dispatch_queue_t __nonnull)queue
+             callback:(void(^__nullable)(Data __nullable data, BOOL ok))callback;
 @end
 
 @interface OCSPAsyncReadWriteChannel<Data : id> : OCSPReadWriteChannel
-- (void)receiveIn:(void(^)(Data data, BOOL ok))callback;
-- (void)send:(Data)value
-        with:(void(^)(BOOL ok))callback;
+- (void)receiveWithOn:(dispatch_queue_t __nonnull)queue
+             callback:(void(^__nullable)(Data __nullable data, BOOL ok))callback;
+- (void)send:(Data __nullable)data
+      withOn:(dispatch_queue_t __nonnull)queue
+    callback:(void(^__nullable)(BOOL ok))callback;
 @end
