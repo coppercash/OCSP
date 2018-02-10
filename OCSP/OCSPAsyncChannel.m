@@ -9,5 +9,20 @@
 #import "OCSPAsyncChannel.h"
 
 @implementation OCSPAsyncChannel
+- (void)receiveIn:(void(^)(id, BOOL))callback { if (callback) { callback(nil, NO); } }
+@end
+
+@implementation OCSPAsyncReadWriteChannel
+
+- (void)receiveIn:(void(^)(id data, BOOL ok))callback
+{
+    
+}
+
+- (void)send:(id)value
+        with:(void(^)(BOOL ok))callback
+{
+    
+}
 
 @end

@@ -11,7 +11,6 @@
 
 @implementation OCSPChannel
 - (BOOL)receive:(id __autoreleasing *)outValue { return NO; }
-- (void)receiveIn:(void(^)(id, BOOL))callback { if (callback) { callback(nil, NO); } }
 @end
 
 @implementation OCSPReadWriteChannel {
@@ -180,6 +179,8 @@
 
 - (void)dealloc
 {
+    [self close];
+    
     pthread_mutex_destroy(&_writing);
     pthread_mutex_destroy(&_reading);
 

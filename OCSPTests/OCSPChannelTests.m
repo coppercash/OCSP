@@ -10,17 +10,16 @@
 #import "OCSP.h"
 
 @interface OCSPChannelTests : XCTestCase
+@property (nonatomic, strong) dispatch_queue_t cq;
+@property (nonatomic, assign) dispatch_time_t nano;
 @end
 @implementation OCSPChannelTests
 
-- (dispatch_queue_t)cq
+- (void)setUp
 {
-    return dispatch_queue_create(NSStringFromSelector(_cmd).UTF8String, DISPATCH_QUEUE_CONCURRENT);
-}
-
-- (dispatch_time_t)nano
-{
-    return dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_USEC);
+    [super setUp];
+    _cq = dispatch_queue_create(NSStringFromSelector(_cmd).UTF8String, DISPATCH_QUEUE_CONCURRENT);
+    _nano = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_USEC);
 }
 
 - (void)test_receiveValueAfterSending
@@ -37,7 +36,7 @@
     NSNumber __block *
     value = nil;
     dispatch_async(self.cq, ^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_USEC), self.cq, ^{
+        dispatch_after(self.nano, self.cq, ^{
             received = [ch receive:&value];
             [rEx fulfill];
         });
@@ -66,7 +65,7 @@
     NSNumber __block *
     value = nil;
     dispatch_async(self.cq, ^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_USEC), self.cq, ^{
+        dispatch_after(self.nano, self.cq, ^{
             sent = [ch send:@42];
             [sEx fulfill];
         });
@@ -81,7 +80,7 @@
     XCTAssertEqualObjects(value, @42);
 }
 
-- (void)test_rejectSendingAfterClosing
+- (void)test_rejectSendingsAfterClosing
 {
     OCSPReadWriteChannel<NSNumber *> *
     ch = [[OCSPReadWriteChannel alloc] init];
@@ -91,7 +90,7 @@
     XCTAssertFalse(ok);
 }
 
-- (void)test_rejectSendingWaitingForReceivingOnClosing
+- (void)test_rejectSendingsWaitingForReceivingOnClosing
 {
     XCTestExpectation *
     ex = [self expectationWithDescription:@"send"];
@@ -109,7 +108,7 @@
     XCTAssertFalse(ok);
 }
 
-- (void)test_rejectReceivingAfterClosing
+- (void)test_rejectReceivingsAfterClosing
 {
     OCSPReadWriteChannel<NSNumber *> *
     ch = [[OCSPReadWriteChannel alloc] init];
@@ -122,7 +121,7 @@
     XCTAssertNil(value);
 }
 
-- (void)test_rejectReceivingWaitingForSendingOnClosing
+- (void)test_rejectReceivingsWaitingForSendingOnClosing
 {
     XCTestExpectation *
     ex = [self expectationWithDescription:@"receive"];
@@ -141,6 +140,56 @@
                       timeout:1.0];
     XCTAssertFalse(ok);
     XCTAssertNil(value);
+}
+
+- (void)test_rejectReceivingsOnDeallocating
+{
+    XCTestExpectation *
+    ex = [self expectationWithDescription:@"receive"];
+    OCSPReadWriteChannel<NSNumber *> *
+    ch = [[OCSPReadWriteChannel alloc] init];
+    BOOL __block
+    ok = YES;
+    NSNumber __block *
+    value = nil;
+    OCSPReadWriteChannel<NSNumber *> __weak *
+    p = ch;
+    dispatch_async(self.cq, ^{
+        ok = [p receive:&value];
+        [ex fulfill];
+    });
+    ch = nil;
+    [self waitForExpectations:@[ex]
+                      timeout:1.0];
+    XCTAssertFalse(ok);
+    XCTAssertNil(value);
+}
+
+- (void)test_performance
+{
+    XCTestExpectation *
+    ex = [self expectationWithDescription:@"receive"];
+    OCSPReadWriteChannel<NSNumber *> *
+    ch = [[OCSPReadWriteChannel alloc] init];
+    dispatch_async(self.cq, ^{
+        while (
+               [ch receive:NULL]
+               ) { }
+        [ex fulfill];
+    });
+    [self measureBlock:^{
+        for (
+             NSInteger
+             i = 0;
+             i < 1000;
+             i += 1
+             ) {
+            [ch send:@1];
+        }
+    }];
+    [ch close];
+    [self waitForExpectations:@[ex]
+                      timeout:10.0];
 }
 
 @end
