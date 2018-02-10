@@ -18,6 +18,11 @@
     return dispatch_queue_create(NSStringFromSelector(_cmd).UTF8String, DISPATCH_QUEUE_CONCURRENT);
 }
 
+- (dispatch_time_t)nano
+{
+    return dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_USEC);
+}
+
 - (void)test_receiveValueAfterSending
 {
     XCTestExpectation *
@@ -83,7 +88,7 @@
     [ch close];
     BOOL
     ok = [ch send:@42];
-    XCTAssertTrue(ok);
+    XCTAssertFalse(ok);
 }
 
 - (void)test_rejectSendingWaitingForReceivingOnClosing

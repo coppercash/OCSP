@@ -7,67 +7,79 @@
 //
 
 #import "OCSPChannel.h"
+#import <pthread/pthread.h>
 
 @implementation OCSPChannel
 - (BOOL)receive:(id __autoreleasing *)outValue { return NO; }
 - (void)receiveIn:(void(^)(id, BOOL))callback { if (callback) { callback(nil, NO); } }
 @end
 
-@interface OCSPReadWriteChannel ()
-@property (readonly, nonatomic, strong) dispatch_semaphore_t
-receiver,
-sender;
-@property (nonatomic, strong) id
-value;
-@end
-
-@implementation OCSPReadWriteChannel
+@implementation OCSPReadWriteChannel {
+    pthread_mutex_t
+    _modifying,
+    _writing,
+    _reading;
+    pthread_cond_t
+    _waitingWriters,
+    _waitingReaders;
+    BOOL
+    _isClosed;
+    NSUInteger
+    _waitingWriterCount,
+    _waitingReaderCount;
+    id
+    _data;
+}
 
 - (instancetype)init
 {
     if (!(
           self = [super init]
           )) {  return nil; }
-    if (pthread_mutex_init(&_writing, NULL) != 0)
-    {
-        return -1;
+    if (
+            pthread_mutex_init(&_writing, NULL) != 0
+       ) {
+        return nil;
     }
 
-    if (pthread_mutex_init(&_reading, NULL) != 0)
-    {
+    if (
+            pthread_mutex_init(&_reading, NULL) != 0
+       ) {
         pthread_mutex_destroy(&_writing);
-        return -1;
+        return nil;
     }
 
-    if (pthread_mutex_init(&_modifying, NULL) != 0)
-    {
+    if (
+            pthread_mutex_init(&_modifying, NULL) != 0
+       ) {
         pthread_mutex_destroy(&_writing);
         pthread_mutex_destroy(&_reading);
-        return -1;
+        return nil;
     }
 
-    if (pthread_cond_init(&_waitingReaders, NULL) != 0)
-    {
+    if (
+            pthread_cond_init(&_waitingReaders, NULL) != 0
+       ) {
         pthread_mutex_destroy(&_modifying);
         pthread_mutex_destroy(&_writing);
         pthread_mutex_destroy(&_reading);
-        return -1;
+        return nil;
     }
 
-    if (pthread_cond_init(&_waitingWriters, NULL) != 0)
-    {
+    if (
+            pthread_cond_init(&_waitingWriters, NULL) != 0
+       ) {
         pthread_mutex_destroy(&_modifying);
         pthread_mutex_destroy(&_writing);
         pthread_mutex_destroy(&_reading);
         pthread_cond_destroy(&_waitingReaders);
-        return -1;
+        return nil;
     }
 
     _isClosed = 0;
     _waitingReaderCount = 0;
     _waitingWriterCount = 0;
-    _data = NULL;
-    return 0;
+    _data = nil;
     return self;
 }
 
@@ -76,80 +88,89 @@ value;
     pthread_mutex_lock(&_writing);
     pthread_mutex_lock(&_modifying);
 
-    if (_isClosed)
-    {
+    if (
+            _isClosed
+       ) {
         pthread_mutex_unlock(&_modifying);
         pthread_mutex_unlock(&_writing);
-        errno = EPIPE;
-        return -1;
+        return NO;
     }
 
     _data = data;
     _waitingWriterCount++;
 
-    if (_waitingReaderCount > 0)
-    {
-        // Signal waiting reader.
+    if (
+            _waitingReaderCount > 0
+       ) {
+        // signal waiting readers.
+        //
         pthread_cond_signal(&_waitingReaders);
     }
 
-    // Block until reader consumed _data.
+    // block until reader consumed _data.
+    //
     pthread_cond_wait(&_waitingWriters, &_modifying);
 
     pthread_mutex_unlock(&_modifying);
     pthread_mutex_unlock(&_writing);
-    return 0;
+    return YES;
 }
 
-- (BOOL)receive:(__autoreleasing id *)outValue
+- (BOOL)receive:(__autoreleasing id *)outData
 {
     pthread_mutex_lock(&_reading);
     pthread_mutex_lock(&_modifying);
     
-    while (!_isClosed && !_waitingWriterCount)
-    {
-        // Block until writer has set _data.
+    while (
+            !_isClosed && !_waitingWriterCount
+          ) {
+        // block until writer has set _data.
+        //
         _waitingReaderCount++;
         pthread_cond_wait(&_waitingReaders, &_modifying);
         _waitingReaderCount--;
     }
     
-    if (_isClosed)
-    {
+    if (
+            _isClosed
+       ) {
         pthread_mutex_unlock(&_modifying);
         pthread_mutex_unlock(&_reading);
-        errno = EPIPE;
-        return -1;
+        return NO;
     }
     
-    if (data)
-    {
-        *data = _data;
+    if (
+            outData
+       ) {
+        *outData = _data;
     }
     _waitingWriterCount--;
     
-    // Signal waiting writer.
+    // signal waiting writer.
+    // 
     pthread_cond_signal(&_waitingWriters);
     
     pthread_mutex_unlock(&_modifying);
     pthread_mutex_unlock(&_reading);
-    return 0;
+    return YES;
 }
 
-- (void)close
+- (BOOL)close
 {
-    int success = 0;
+    BOOL 
+    success = YES;
     pthread_mutex_lock(&_modifying);
-    if (_isClosed)
-    {
-        // Channel already closed.
-        success = -1;
-        errno = EPIPE;
+    if (
+            _isClosed
+       ) {
+        // channel already closed.
+        //
+        success = NO;
     }
-    else
-    {
-        // Otherwise close it.
-        _isClosed = 1;
+    else {
+        // otherwise close it.
+        //
+        _isClosed = YES;
         pthread_cond_broadcast(&_waitingReaders);
         pthread_cond_broadcast(&_waitingWriters);
     }
@@ -165,7 +186,6 @@ value;
     pthread_mutex_destroy(&_modifying);
     pthread_cond_destroy(&_waitingReaders);
     pthread_cond_destroy(&_waitingWriters);
-    free(chan);
 }
 
 @end

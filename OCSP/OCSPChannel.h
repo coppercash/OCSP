@@ -14,7 +14,7 @@
 
 @interface OCSPReadWriteChannel<Data : id> : OCSPChannel
 - (BOOL)send:(Data)value;
-- (void)close;
+- (BOOL)close;
 @end
 
 
