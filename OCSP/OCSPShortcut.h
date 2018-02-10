@@ -9,7 +9,7 @@
 #ifndef OCSPShortcut_h
 #define OCSPShortcut_h
 
-typedef OCSPChannel OChan;
+typedef OCSPChannel Chan;
 typedef OCSPReadWriteChannel RWChan;
 typedef OCSPAsyncChannel AChan;
 typedef OCSPAsyncReadWriteChannel ARWChan;
