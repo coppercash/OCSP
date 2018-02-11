@@ -9,9 +9,15 @@
 #ifndef OCSPShortcut_h
 #define OCSPShortcut_h
 
-typedef OCSPChannel Chan;
-typedef OCSPReadWriteChannel RWChan;
-typedef OCSPAsyncChannel AChan;
-typedef OCSPAsyncReadWriteChannel ARWChan;
+@class OCSPChannel<D>;
+@compatibility_alias Chan OCSPChannel;
+@class OCSPReadWriteChannel<D>;
+@compatibility_alias RWChan OCSPReadWriteChannel;
+@class OCSPBufferedReadWriteChannel<D>;
+@compatibility_alias BRWChan OCSPBufferedReadWriteChannel;
+@class OCSPAsyncChannel<D>;
+@compatibility_alias AChan OCSPAsyncChannel;
+@class OCSPAsyncBufferedReadWriteChannel<D>;
+@compatibility_alias ABRWChan OCSPAsyncBufferedReadWriteChannel;
 
 #endif /* OCSPShortcut_h */

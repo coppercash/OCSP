@@ -25,22 +25,13 @@
 {
     XCTestExpectation *
     rEx = [self expectationWithDescription:@"recieve"];
-    XCTestExpectation *
-    sEx = [self expectationWithDescription:@"send"];
-    ARWChan<NSNumber *> *
-    ch = [[ARWChan alloc] init];
+    ABRWChan<NSNumber *> *
+    ch = [[ABRWChan alloc] initWithCapacity:1];
     BOOL __block
-    sent = NO,
-    received = NO;
+    received = NO,
+    sent = [ch send:@42];
     NSNumber __block *
     value = nil;
-    [ch send:@42
-      withOn:self.cbq
-    callback:
-     ^(BOOL ok) {
-        sent = ok;
-        [sEx fulfill];
-    }];
     [ch receiveWithOn:self.cbq
              callback:
      ^(NSNumber *data, BOOL ok) {
@@ -48,7 +39,7 @@
          received = ok;
          [rEx fulfill];
      }];
-    [self waitForExpectations:@[sEx, rEx]
+    [self waitForExpectations:@[rEx]
                       timeout:1.0];
     XCTAssertTrue(received);
     XCTAssertTrue(sent);
@@ -59,8 +50,8 @@
 {
     XCTestExpectation *
     rEx = [self expectationWithDescription:@"recieve"];
-    ARWChan<NSNumber *> *
-    ch = [[ARWChan alloc] init];
+    ABRWChan<NSNumber *> *
+    ch = [[ABRWChan alloc] init];
     [ch close];
     BOOL __block
     result = YES;
@@ -83,8 +74,8 @@
 {
     XCTestExpectation *
     rEx = [self expectationWithDescription:@"recieve"];
-    ARWChan<NSNumber *> *
-    ch = [[ARWChan alloc] init];
+    ABRWChan<NSNumber *> *
+    ch = [[ABRWChan alloc] init];
     BOOL __block
     result = YES;
     NSNumber __block *
@@ -98,6 +89,30 @@
      }];
     [ch close];
     [self waitForExpectations:@[rEx]
+                      timeout:1.0];
+    XCTAssertFalse(result);
+    XCTAssertNil(value);
+}
+
+- (void)test_rejectReceivingsOnDeallocating
+{
+    XCTestExpectation *
+    ex = [self expectationWithDescription:@"receive"];
+    ABRWChan<NSNumber *> *
+    ch = [[ABRWChan alloc] initWithCapacity:1];
+    BOOL __block
+    result = YES;
+    NSNumber __block *
+    value = @42;
+    [ch receiveWithOn:self.cbq
+             callback:
+     ^(id  _Nullable data, BOOL ok) {
+         result = ok;
+         value = data;
+         [ex fulfill];
+     }];
+    ch = nil;
+    [self waitForExpectations:@[ex]
                       timeout:1.0];
     XCTAssertFalse(result);
     XCTAssertNil(value);
