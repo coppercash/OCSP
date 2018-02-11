@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 #import <OCSP/OCSP.h>
-#import <OCSP/OCSPShortcut.h>
 
 @interface OCSPChannelTests : XCTestCase
 @property (nonatomic, strong) dispatch_queue_t cq;
