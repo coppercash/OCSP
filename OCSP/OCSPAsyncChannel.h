@@ -14,9 +14,9 @@
 @end
 
 @interface OCSPAsyncReadWriteChannel<Data : id> : OCSPReadWriteChannel
-- (void)receiveWithOn:(dispatch_queue_t __nonnull)queue
+- (void)receiveWithOn:(dispatch_queue_t __nullable)queue
              callback:(void(^__nullable)(Data __nullable data, BOOL ok))callback;
 - (void)send:(Data __nullable)data
-      withOn:(dispatch_queue_t __nonnull)queue
+      withOn:(dispatch_queue_t __nullable)queue
     callback:(void(^__nullable)(BOOL ok))callback;
 @end

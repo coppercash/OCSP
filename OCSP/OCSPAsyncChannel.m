@@ -38,7 +38,7 @@
     (
      "ocsp.ayncchannel.watch.reader",
      DISPATCH_QUEUE_SERIAL
-    );
+     );
     return self;
 }
 
@@ -53,9 +53,12 @@
         if (!(
               callback
               )) { return; }
-        dispatch_async(queue, ^{
-            callback(data, ok);
-        });
+        dispatch_async
+        (
+         (queue ?: self.defaultCallbackQueue),
+         ^{
+             callback(data, ok);
+         });
     });
 }
 
@@ -69,10 +72,18 @@
         if (!(
               callback
               )) { return; }
-        dispatch_async(queue, ^{
-            callback(ok);
-        });
+        dispatch_async
+        (
+         (queue ?: self.defaultCallbackQueue),
+         ^{
+             callback(ok);
+         });
     });
+}
+
+- (dispatch_queue_t)defaultCallbackQueue
+{
+    return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 }
 
 @end
