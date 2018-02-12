@@ -23,7 +23,7 @@
 @implementation OCSPAsyncBufferedReadWriteChannel {
     dispatch_queue_t
     _readQueue;
-    OCSBufferedReadWriteChannel
+    OCSPBufferedReadWriteChannel
     *_proto;
 }
 
@@ -36,6 +36,14 @@
              "ocsp.ayncchannel.read",
              DISPATCH_QUEUE_SERIAL
              )];
+}
+
+- (void)dealloc
+{
+    // `close` to notify the waiting readers on `_readQueue` to continue execution,
+    // before the `super.dealloc` released the `_readQueue`
+    //
+    [self close];
 }
 
 - (instancetype)initWithCapacity:(NSInteger)capacity
@@ -55,7 +63,7 @@
     if (!(
           self = [super init]
           )) { return nil; }
-    _proto = [[OCSBufferedReadWriteChannel alloc] initWithCapacity:capacity];
+    _proto = [[OCSPBufferedReadWriteChannel alloc] initWithCapacity:capacity];
     _readQueue = readQueue;
     return self;
 }
@@ -63,15 +71,17 @@
 - (void)receiveWithOn:(dispatch_queue_t)queue
              callback:(void(^)(id, BOOL))callback;
 {
-    // weakify proto, so that the channel can be closed properly if released
+    // weakify _proto, so that the channel can be closed properly if released
+    // weakifying self doesn't work.
+    // coz' it will be `objc_loadWeakRetained`, and never be released coz' the execution will be stuck on `receive:`
     //
-    __typeof(self) __weak
-    __weak_self = self;
+    __typeof(_proto) __weak
+    __weak_proto__ = _proto;
     dispatch_async(_readQueue, ^{
         id
         data;
         BOOL
-        ok = [__weak_self receive:&data];
+        ok = [__weak_proto__ receive:&data];
         if (!(
               callback
               )) { return; }

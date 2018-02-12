@@ -233,7 +233,7 @@ typedef NS_OPTIONS(NSInteger, OCSPReadWriteChannelFlag) {
 
 @end
 
-@implementation OCSBufferedReadWriteChannel {
+@implementation OCSPBufferedReadWriteChannel {
     NSMutableArray *
     _queue;
     NSUInteger
@@ -279,6 +279,7 @@ typedef NS_OPTIONS(NSInteger, OCSPReadWriteChannelFlag) {
         _waitingReaderCount > 0
         ) {
         // signal waiting reader.
+        //
         pthread_cond_signal(&_waitingReaders);
     }
     
@@ -300,6 +301,7 @@ typedef NS_OPTIONS(NSInteger, OCSPReadWriteChannelFlag) {
         }
         
         // block until something is added.
+        //
         _waitingReaderCount++;
         pthread_cond_wait(&_waitingReaders, &_modifying);
         _waitingReaderCount--;
@@ -318,6 +320,7 @@ typedef NS_OPTIONS(NSInteger, OCSPReadWriteChannelFlag) {
         _waitingWriterCount > 0
         ) {
         // signal waiting writer.
+        //
         pthread_cond_signal(&_waitingWriters);
     }
     

@@ -17,7 +17,7 @@
 - (BOOL)close;
 @end
 
-@interface OCSBufferedReadWriteChannel<Data : id> : OCSPChannel
+@interface OCSPBufferedReadWriteChannel<Data : id> : OCSPChannel
 - (instancetype __nonnull)initWithCapacity:(NSUInteger)capacity;
 - (BOOL)send:(Data __nullable)value;
 - (BOOL)close;
