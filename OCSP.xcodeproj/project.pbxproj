@@ -12,6 +12,12 @@
 		3DC73652202D342500C186EE /* libOCSP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC7363D202D340D00C186EE /* libOCSP.a */; };
 		3DC7365A202D3C5000C186EE /* OCSPChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DC73658202D3C5000C186EE /* OCSPChannel.h */; };
 		3DC7365B202D3C5000C186EE /* OCSPChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC73659202D3C5000C186EE /* OCSPChannel.m */; };
+		BE748DDF203D354900FE6749 /* OCSPReadWriteChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE748DDD203D354900FE6749 /* OCSPReadWriteChannel.h */; };
+		BE748DE0203D354900FE6749 /* OCSPReadWriteChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE748DDE203D354900FE6749 /* OCSPReadWriteChannel.m */; };
+		BE748DE4203D360E00FE6749 /* OCSPBufferedReadWriteChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE748DE2203D360E00FE6749 /* OCSPBufferedReadWriteChannel.h */; };
+		BE748DE5203D360E00FE6749 /* OCSPBufferedReadWriteChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE748DE3203D360E00FE6749 /* OCSPBufferedReadWriteChannel.m */; };
+		BE748DE8203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE748DE6203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.h */; };
+		BE748DE9203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE748DE7203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.m */; };
 		BE857628202E954800BEBD43 /* OCSPAsyncChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */; };
 		BE857629202E954800BEBD43 /* OCSPAsyncChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */; };
 		BE85762B202E9FAC00BEBD43 /* OCSPAsyncChannelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BE85762A202E9FAC00BEBD43 /* OCSPAsyncChannelTests.m */; };
@@ -35,6 +41,13 @@
 		3DC73651202D342500C186EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3DC73658202D3C5000C186EE /* OCSPChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPChannel.h; sourceTree = "<group>"; };
 		3DC73659202D3C5000C186EE /* OCSPChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPChannel.m; sourceTree = "<group>"; };
+		BE748DDD203D354900FE6749 /* OCSPReadWriteChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPReadWriteChannel.h; sourceTree = "<group>"; };
+		BE748DDE203D354900FE6749 /* OCSPReadWriteChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPReadWriteChannel.m; sourceTree = "<group>"; };
+		BE748DE1203D35A200FE6749 /* OCSPChannel+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCSPChannel+Internal.h"; sourceTree = "<group>"; };
+		BE748DE2203D360E00FE6749 /* OCSPBufferedReadWriteChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPBufferedReadWriteChannel.h; sourceTree = "<group>"; };
+		BE748DE3203D360E00FE6749 /* OCSPBufferedReadWriteChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPBufferedReadWriteChannel.m; sourceTree = "<group>"; };
+		BE748DE6203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncBufferedReadWriteChannel.h; sourceTree = "<group>"; };
+		BE748DE7203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncBufferedReadWriteChannel.m; sourceTree = "<group>"; };
 		BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncChannel.h; sourceTree = "<group>"; };
 		BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncChannel.m; sourceTree = "<group>"; };
 		BE85762A202E9FAC00BEBD43 /* OCSPAsyncChannelTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncChannelTests.m; sourceTree = "<group>"; };
@@ -84,8 +97,15 @@
 				3DC73640202D340D00C186EE /* OCSP.h */,
 				3DC73658202D3C5000C186EE /* OCSPChannel.h */,
 				3DC73659202D3C5000C186EE /* OCSPChannel.m */,
+				BE748DE1203D35A200FE6749 /* OCSPChannel+Internal.h */,
+				BE748DDD203D354900FE6749 /* OCSPReadWriteChannel.h */,
+				BE748DDE203D354900FE6749 /* OCSPReadWriteChannel.m */,
+				BE748DE2203D360E00FE6749 /* OCSPBufferedReadWriteChannel.h */,
+				BE748DE3203D360E00FE6749 /* OCSPBufferedReadWriteChannel.m */,
 				BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */,
 				BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */,
+				BE748DE6203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.h */,
+				BE748DE7203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.m */,
 				BE85762C202EB49E00BEBD43 /* OCSPShortcut.h */,
 			);
 			path = OCSP;
@@ -109,8 +129,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DC73641202D340D00C186EE /* OCSP.h in Headers */,
+				BE748DDF203D354900FE6749 /* OCSPReadWriteChannel.h in Headers */,
+				BE748DE4203D360E00FE6749 /* OCSPBufferedReadWriteChannel.h in Headers */,
 				BE857628202E954800BEBD43 /* OCSPAsyncChannel.h in Headers */,
 				3DC7365A202D3C5000C186EE /* OCSPChannel.h in Headers */,
+				BE748DE8203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,7 +228,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DC7365B202D3C5000C186EE /* OCSPChannel.m in Sources */,
+				BE748DE5203D360E00FE6749 /* OCSPBufferedReadWriteChannel.m in Sources */,
+				BE748DE0203D354900FE6749 /* OCSPReadWriteChannel.m in Sources */,
 				BE857629202E954800BEBD43 /* OCSPAsyncChannel.m in Sources */,
+				BE748DE9203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

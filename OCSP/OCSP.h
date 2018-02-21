@@ -7,5 +7,8 @@
 //
 
 #import <OCSP/OCSPChannel.h>
+#import <OCSP/OCSPReadWriteChannel.h>
+#import <OCSP/OCSPBufferedReadWriteChannel.h>
 #import <OCSP/OCSPAsyncChannel.h>
+#import <OCSP/OCSPAsyncBufferedReadWriteChannel.h>
 #import <OCSP/OCSPShortcut.h>

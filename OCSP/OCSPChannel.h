@@ -9,16 +9,20 @@
 #import <Foundation/Foundation.h>
 
 @interface OCSPChannel<Data : id> : NSObject
+{
+@protected
+    pthread_mutex_t
+    _modifying;
+    pthread_cond_t
+    _waitingWriters,
+    _waitingReaders;
+    NSUInteger
+    _waitingWriterCount,
+    _waitingReaderCount;
+    BOOL
+    _isClosed;
+    NSInteger
+    _flags;
+}
 - (BOOL)receive:(Data __nullable __autoreleasing * __nullable)outData;
-@end
-
-@interface OCSPReadWriteChannel<Data : id> : OCSPChannel
-- (BOOL)send:(Data __nullable)value;
-- (BOOL)close;
-@end
-
-@interface OCSPBufferedReadWriteChannel<Data : id> : OCSPChannel
-- (instancetype __nonnull)initWithCapacity:(NSUInteger)capacity;
-- (BOOL)send:(Data __nullable)value;
-- (BOOL)close;
 @end
