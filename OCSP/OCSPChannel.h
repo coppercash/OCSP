@@ -12,13 +12,12 @@
 {
 @protected
     pthread_mutex_t
-    _modifying;
+    _modifying; // exlusive modifier (reader or writer) at any given time
     pthread_cond_t
-    _waitingWriters,
-    _waitingReaders;
+    _readOut,   // signal on data read out (or channel closed)
+    _writtenIn; // signal on data writren in (or channel closed)
     NSUInteger
-    _waitingWriterCount,
-    _waitingReaderCount;
+    _dataCount; // written in data count. <= 1 if no exception
     BOOL
     _isClosed;
     NSInteger

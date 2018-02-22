@@ -57,9 +57,13 @@ typedef NS_OPTIONS(NSInteger, OCSPReadWriteChannelFlag) {
 
 - (BOOL)send:(id)data
 {
+    // Exlusive [writer, modifier] at any given time.
+    //
     pthread_mutex_lock(&_writing);
     pthread_mutex_lock(&_modifying);
     
+    // Reject if the channel has been closed.
+    //
     if (
         _isClosed
         ) {
@@ -69,19 +73,31 @@ typedef NS_OPTIONS(NSInteger, OCSPReadWriteChannelFlag) {
     }
     
     _data = data;
-    _waitingWriterCount++;
+    _dataCount++;
     
-    if (
-        _waitingReaderCount > 0
-        ) {
-        // signal waiting readers.
-        //
-        pthread_cond_signal(&_waitingReaders);
+    // Signal data written in to waiting readers.
+    //
+    pthread_cond_signal(&_writtenIn);
+
+    // Wait for
+    // data read out by readers
+    // or channel closed.
+    //
+    while (!(
+             _isClosed || (_dataCount == 0)
+             )) {
+        pthread_cond_wait(&_readOut, &_modifying);
     }
     
-    // block until reader consumed _data.
+    // Reject if waked on channel closed
     //
-    pthread_cond_wait(&_waitingWriters, &_modifying);
+    if (
+        _isClosed
+        ) {
+        pthread_mutex_unlock(&_modifying);
+        pthread_mutex_unlock(&_writing);
+        return NO;
+    }
     
     pthread_mutex_unlock(&_modifying);
     pthread_mutex_unlock(&_writing);
@@ -90,19 +106,33 @@ typedef NS_OPTIONS(NSInteger, OCSPReadWriteChannelFlag) {
 
 - (BOOL)receive:(__autoreleasing id *)outData
 {
+    // Exlusive [reader, modifier] at any given time.
+    //
     pthread_mutex_lock(&_reading);
     pthread_mutex_lock(&_modifying);
     
-    while (
-           !_isClosed && (_waitingWriterCount == 0)
-           ) {
-        // block until writer has set _data.
-        //
-        _waitingReaderCount++;
-        pthread_cond_wait(&_waitingReaders, &_modifying);
-        _waitingReaderCount--;
+    // Reject if the channel has been closed.
+    //
+    if (
+        _isClosed
+        ) {
+        pthread_mutex_unlock(&_modifying);
+        pthread_mutex_unlock(&_reading);
+        return NO;
     }
     
+    // Wait for
+    // data written in by writters
+    // or channel closed.
+    //
+    while (!(
+             _isClosed || (_dataCount > 0)
+             )) {
+        pthread_cond_wait(&_writtenIn, &_modifying);
+    }
+    
+    // Reject if waked on channel closed
+    //
     if (
         _isClosed
         ) {
@@ -116,11 +146,11 @@ typedef NS_OPTIONS(NSInteger, OCSPReadWriteChannelFlag) {
         ) {
         *outData = _data;
     }
-    _waitingWriterCount--;
+    _dataCount--;
     
-    // signal waiting writer.
+    // Signal data read out to waiting writer.
     //
-    pthread_cond_signal(&_waitingWriters);
+    pthread_cond_signal(&_readOut);
     
     pthread_mutex_unlock(&_modifying);
     pthread_mutex_unlock(&_reading);

@@ -23,17 +23,16 @@
         ) { return nil; }
     _flags |= OCSPChannelFlagModifying;
     if (
-        pthread_cond_init(&_waitingReaders, NULL) != 0
+        pthread_cond_init(&_writtenIn, NULL) != 0
         ) { return nil; }
     _flags |= OCSPChannelFlagWaitingReaders;
     if (
-        pthread_cond_init(&_waitingWriters, NULL) != 0
+        pthread_cond_init(&_readOut, NULL) != 0
         ) { return nil; }
     _flags |= OCSPChannelFlagWaitingWriters;
     
     _isClosed = NO;
-    _waitingReaderCount = 0;
-    _waitingWriterCount = 0;
+    _dataCount = 0;
     return self;
 }
 
@@ -42,12 +41,12 @@
     if (
         _flags & OCSPChannelFlagWaitingWriters
         ) {
-        pthread_cond_destroy(&_waitingWriters);
+        pthread_cond_destroy(&_readOut);
     }
     if (
         _flags & OCSPChannelFlagWaitingReaders
         ) {
-        pthread_cond_destroy(&_waitingReaders);
+        pthread_cond_destroy(&_writtenIn);
     }
     if (
         _flags & OCSPChannelFlagModifying
@@ -72,8 +71,8 @@
         // otherwise close it.
         //
         _isClosed = YES;
-        pthread_cond_broadcast(&_waitingReaders);
-        pthread_cond_broadcast(&_waitingWriters);
+        pthread_cond_broadcast(&_writtenIn);
+        pthread_cond_broadcast(&_readOut);
     }
     pthread_mutex_unlock(&_modifying);
     return success;

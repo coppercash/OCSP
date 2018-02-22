@@ -13,6 +13,7 @@
     NSMutableArray *
     _queue;
     NSUInteger
+    _readerCount,
     _capacity;
 }
 - (instancetype __nonnull)initWithCapacity:(NSUInteger)capacity;

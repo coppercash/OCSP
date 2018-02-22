@@ -11,8 +11,8 @@
 @interface OCSPReadWriteChannel<Data : id> : OCSPChannel
 {
     pthread_mutex_t
-    _writing,
-    _reading;
+    _writing,   // exlusive writer at any given time
+    _reading;   // exlusive reader at any given time
     id
     _data;
 }

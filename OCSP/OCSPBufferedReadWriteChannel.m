@@ -23,6 +23,7 @@
           self = [super init]
           )) {  return nil; }
     _capacity = capacity;
+    _readerCount = 0;
     _queue = [[NSMutableArray alloc] initWithCapacity:capacity];
     return self;
 }
@@ -40,19 +41,19 @@
            ) {
         // block until something is removed.
         //
-        _waitingWriterCount++;
-        pthread_cond_wait(&_waitingWriters, &_modifying);
-        _waitingWriterCount--;
+        _dataCount++;
+        pthread_cond_wait(&_readOut, &_modifying);
+        _dataCount--;
     }
     
     [_queue addObject:data];
     
     if (
-        _waitingReaderCount > 0
+        _readerCount > 0
         ) {
         // signal waiting reader.
         //
-        pthread_cond_signal(&_waitingReaders);
+        pthread_cond_signal(&_writtenIn);
     }
     
     pthread_mutex_unlock(&_modifying);
@@ -74,9 +75,9 @@
         
         // block until something is added.
         //
-        _waitingReaderCount++;
-        pthread_cond_wait(&_waitingReaders, &_modifying);
-        _waitingReaderCount--;
+        _readerCount++;
+        pthread_cond_wait(&_writtenIn, &_modifying);
+        _readerCount--;
     }
     
     id
@@ -89,11 +90,11 @@
     }
     
     if (
-        _waitingWriterCount > 0
+        _dataCount > 0
         ) {
         // signal waiting writer.
         //
-        pthread_cond_signal(&_waitingWriters);
+        pthread_cond_signal(&_readOut);
     }
     
     pthread_mutex_unlock(&_modifying);

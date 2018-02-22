@@ -93,17 +93,22 @@
 - (void)test_rejectSendingsWaitingForReceivingOnClosing
 {
     XCTestExpectation *
-    ex = [self expectationWithDescription:@"send"];
+    cEx = [self expectationWithDescription:@"close"];
+    XCTestExpectation *
+    sEx = [self expectationWithDescription:@"send"];
     RWChan<NSNumber *> *
     ch = [[RWChan alloc] init];
     BOOL __block
     ok = YES;
     dispatch_async(self.cq, ^{
+        dispatch_after(self.nano, self.cq, ^{
+            [ch close];
+            [cEx fulfill];
+        });
         ok = [ch send:@42];
-        [ex fulfill];
+        [sEx fulfill];
     });
-    [ch close];
-    [self waitForExpectations:@[ex]
+    [self waitForExpectations:@[cEx, sEx]
                       timeout:1.0];
     XCTAssertFalse(ok);
 }
@@ -124,7 +129,9 @@
 - (void)test_rejectReceivingsWaitingForSendingOnClosing
 {
     XCTestExpectation *
-    ex = [self expectationWithDescription:@"receive"];
+    cEx = [self expectationWithDescription:@"close"];
+    XCTestExpectation *
+    rEx = [self expectationWithDescription:@"receive"];
     RWChan<NSNumber *> *
     ch = [[RWChan alloc] init];
     BOOL __block
@@ -132,11 +139,14 @@
     NSNumber __block *
     value = nil;
     dispatch_async(self.cq, ^{
+        dispatch_after(self.nano, self.cq, ^{
+            [ch close];
+            [cEx fulfill];
+        });
         ok = [ch receive:&value];
-        [ex fulfill];
+        [rEx fulfill];
     });
-    [ch close];
-    [self waitForExpectations:@[ex]
+    [self waitForExpectations:@[cEx, rEx]
                       timeout:1.0];
     XCTAssertFalse(ok);
     XCTAssertNil(value);
@@ -146,20 +156,29 @@
 {
     XCTestExpectation *
     ex = [self expectationWithDescription:@"receive"];
+    XCTestExpectation *
+    rEx = [self expectationWithDescription:@"release"];
     RWChan<NSNumber *> *
     ch = [[RWChan alloc] init];
     BOOL __block
     ok = YES;
     NSNumber __block *
     value = nil;
-    RWChan<NSNumber *> __weak *
-    p = ch;
+    __typeof(ch) __weak
+    weak = ch;
     dispatch_async(self.cq, ^{
-        ok = [p receive:&value];
+        __typeof(ch) __weak
+        strong = weak;
+        dispatch_after(self.nano, self.cq, ^{
+            [strong description];
+            [rEx fulfill];
+        });
+        strong = nil;
+        ok = [weak receive:&value];
         [ex fulfill];
     });
     ch = nil;
-    [self waitForExpectations:@[ex]
+    [self waitForExpectations:@[rEx, ex]
                       timeout:1.0];
     XCTAssertFalse(ok);
     XCTAssertNil(value);
