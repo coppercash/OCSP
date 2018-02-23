@@ -23,71 +23,98 @@
 
 - (void)test_receiveValueAfterSending
 {
-    XCTestExpectation *
-    rEx = [self expectationWithDescription:@"recieve"];
-    ABRWChan<NSNumber *> *
-    ch = [[ABRWChan alloc] initWithCapacity:1];
+    NSArray<XCTestExpectation *> *
+    exs = @[
+            [self expectationWithDescription:@"send"],
+            [self expectationWithDescription:@"recieve"],
+            ];
     BOOL __block
-    received = NO,
-    sent = [ch send:@42];
-    NSNumber __block *
-    value = nil;
-    [ch receiveWithOn:self.cbq
-             callback:
-     ^(NSNumber *data, BOOL ok) {
-         value = data;
-         received = ok;
-         [rEx fulfill];
+    isReceived = NO,
+    isSent = NO;
+    id __block
+    received = nil;
+    ARWChan<NSNumber *> *
+    ch = [[ARWChan alloc] init];
+    [ch send:@42
+          on:self.cbq
+        with:
+     ^(BOOL ok) {
+         isSent = ok;
+         [exs[0] fulfill];
      }];
-    [self waitForExpectations:@[rEx]
+    [ch receiveOn:self.cbq
+             with:
+     ^(NSNumber *data, BOOL ok) {
+         isReceived = ok;
+         received = data;
+         [exs[1] fulfill];
+     }];
+    [self waitForExpectations:exs
                       timeout:1.0];
-    XCTAssertTrue(received);
-    XCTAssertTrue(sent);
-    XCTAssertEqualObjects(value, @42);
+    XCTAssertTrue(isReceived);
+    XCTAssertTrue(isSent);
+    XCTAssertEqualObjects(received, @42);
 }
-
+/*
 - (void)test_rejectReceivingsAfterClosing
 {
-    XCTestExpectation *
-    rEx = [self expectationWithDescription:@"recieve"];
-    ABRWChan<NSNumber *> *
-    ch = [[ABRWChan alloc] init];
-    [ch close];
+    NSArray<XCTestExpectation *> *
+    exs = @[
+            [self expectationWithDescription:@"send"],
+            [self expectationWithDescription:@"recieve"],
+            [self expectationWithDescription:@"close"],
+            ];
     BOOL __block
-    result = YES;
-    NSNumber __block *
-    value = @42;
-    [ch receiveWithOn:self.cbq
-             callback:
+    isReceived = NO,
+    isSent = NO;
+    id __block
+    received = nil;
+    ARWChan<NSNumber *> *
+    ch = [[ARWChan alloc] init];
+    [ch closeOn:self.cbq
+           with:^(BOOL ok) {
+               
+           }];
+    [ch receiveOn:self.cbq
+             with:
      ^(NSNumber *data, BOOL ok) {
-         result = ok;
-         value = data;
-         [rEx fulfill];
+         isReceived = ok;
+         received = data;
+         [exs[1] fulfill];
      }];
-    [self waitForExpectations:@[rEx]
+    [ch send:@42
+          on:self.cbq
+        with:
+     ^(BOOL ok) {
+         isSent = ok;
+         [exs[0] fulfill];
+     }];
+    [self waitForExpectations:exs
                       timeout:1.0];
-    XCTAssertFalse(result);
-    XCTAssertNil(value);
+    XCTAssertTrue(isReceived);
+    XCTAssertTrue(isSent);
+    XCTAssertEqualObjects(received, @42);
 }
+ */
 
 - (void)test_rejectReceivingsWaitingForSendingOnClosing
 {
     XCTestExpectation *
     rEx = [self expectationWithDescription:@"recieve"];
-    ABRWChan<NSNumber *> *
-    ch = [[ABRWChan alloc] init];
+    ARWChan<NSNumber *> *
+    ch = [[ARWChan alloc] init];
     BOOL __block
     result = YES;
     NSNumber __block *
     value = @42;
-    [ch receiveWithOn:self.cbq
-             callback:
+    [ch receiveOn:self.cbq
+             with:
      ^(NSNumber *data, BOOL ok) {
          result = ok;
          value = data;
          [rEx fulfill];
      }];
-    [ch close];
+    [ch close:nil];
     [self waitForExpectations:@[rEx]
                       timeout:1.0];
     XCTAssertFalse(result);
@@ -98,15 +125,15 @@
 {
     XCTestExpectation *
     ex = [self expectationWithDescription:@"receive"];
-    ABRWChan<NSNumber *> *
-    ch = [[ABRWChan alloc] initWithCapacity:1];
+    ARWChan<NSNumber *> *
+    ch = [[ARWChan alloc] init];
     BOOL __block
     result = YES;
     NSNumber __block *
     value = @42;
-    [ch receiveWithOn:self.cbq
-             callback:
-     ^(id  _Nullable data, BOOL ok) {
+    [ch receiveOn:self.cbq
+             with:
+     ^(id data, BOOL ok) {
          result = ok;
          value = data;
          [ex fulfill];

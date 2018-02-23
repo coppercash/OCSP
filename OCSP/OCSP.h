@@ -10,5 +10,5 @@
 #import <OCSP/OCSPReadWriteChannel.h>
 #import <OCSP/OCSPBufferedReadWriteChannel.h>
 #import <OCSP/OCSPAsyncChannel.h>
-#import <OCSP/OCSPAsyncBufferedReadWriteChannel.h>
-#import <OCSP/OCSPShortcut.h>
+#import <OCSP/OCSPAsyncReadWriteChannel.h>
+#import <OCSP/OCSPShortcuts.h>

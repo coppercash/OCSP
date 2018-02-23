@@ -16,8 +16,12 @@
 		BE748DE0203D354900FE6749 /* OCSPReadWriteChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE748DDE203D354900FE6749 /* OCSPReadWriteChannel.m */; };
 		BE748DE4203D360E00FE6749 /* OCSPBufferedReadWriteChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE748DE2203D360E00FE6749 /* OCSPBufferedReadWriteChannel.h */; };
 		BE748DE5203D360E00FE6749 /* OCSPBufferedReadWriteChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE748DE3203D360E00FE6749 /* OCSPBufferedReadWriteChannel.m */; };
-		BE748DE8203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE748DE6203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.h */; };
-		BE748DE9203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE748DE7203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.m */; };
+		BE748DEC203D39F600FE6749 /* OCSPAsyncReadWriteChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE748DEA203D39F600FE6749 /* OCSPAsyncReadWriteChannel.h */; };
+		BE748DED203D39F600FE6749 /* OCSPAsyncReadWriteChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE748DEB203D39F600FE6749 /* OCSPAsyncReadWriteChannel.m */; };
+		BE748E082041614000FE6749 /* OCSPAsyncChannel+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = BE748E062041614000FE6749 /* OCSPAsyncChannel+Internal.h */; };
+		BE748E092041614000FE6749 /* OCSPAsyncChannel+Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = BE748E072041614000FE6749 /* OCSPAsyncChannel+Internal.m */; };
+		BE748E0C204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = BE748E0A204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.h */; };
+		BE748E0D204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = BE748E0B204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.m */; };
 		BE857628202E954800BEBD43 /* OCSPAsyncChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */; };
 		BE857629202E954800BEBD43 /* OCSPAsyncChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */; };
 		BE85762B202E9FAC00BEBD43 /* OCSPAsyncChannelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BE85762A202E9FAC00BEBD43 /* OCSPAsyncChannelTests.m */; };
@@ -46,12 +50,16 @@
 		BE748DE1203D35A200FE6749 /* OCSPChannel+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCSPChannel+Internal.h"; sourceTree = "<group>"; };
 		BE748DE2203D360E00FE6749 /* OCSPBufferedReadWriteChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPBufferedReadWriteChannel.h; sourceTree = "<group>"; };
 		BE748DE3203D360E00FE6749 /* OCSPBufferedReadWriteChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPBufferedReadWriteChannel.m; sourceTree = "<group>"; };
-		BE748DE6203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncBufferedReadWriteChannel.h; sourceTree = "<group>"; };
-		BE748DE7203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncBufferedReadWriteChannel.m; sourceTree = "<group>"; };
+		BE748DEA203D39F600FE6749 /* OCSPAsyncReadWriteChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncReadWriteChannel.h; sourceTree = "<group>"; };
+		BE748DEB203D39F600FE6749 /* OCSPAsyncReadWriteChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncReadWriteChannel.m; sourceTree = "<group>"; };
+		BE748E062041614000FE6749 /* OCSPAsyncChannel+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCSPAsyncChannel+Internal.h"; sourceTree = "<group>"; };
+		BE748E072041614000FE6749 /* OCSPAsyncChannel+Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCSPAsyncChannel+Internal.m"; sourceTree = "<group>"; };
+		BE748E0A204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCSPAsyncReadWriteChannel+Internal.h"; sourceTree = "<group>"; };
+		BE748E0B204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCSPAsyncReadWriteChannel+Internal.m"; sourceTree = "<group>"; };
 		BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncChannel.h; sourceTree = "<group>"; };
 		BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncChannel.m; sourceTree = "<group>"; };
 		BE85762A202E9FAC00BEBD43 /* OCSPAsyncChannelTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncChannelTests.m; sourceTree = "<group>"; };
-		BE85762C202EB49E00BEBD43 /* OCSPShortcut.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPShortcut.h; sourceTree = "<group>"; };
+		BE85762C202EB49E00BEBD43 /* OCSPShortcuts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPShortcuts.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,9 +112,13 @@
 				BE748DE3203D360E00FE6749 /* OCSPBufferedReadWriteChannel.m */,
 				BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */,
 				BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */,
-				BE748DE6203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.h */,
-				BE748DE7203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.m */,
-				BE85762C202EB49E00BEBD43 /* OCSPShortcut.h */,
+				BE748E062041614000FE6749 /* OCSPAsyncChannel+Internal.h */,
+				BE748E072041614000FE6749 /* OCSPAsyncChannel+Internal.m */,
+				BE748DEA203D39F600FE6749 /* OCSPAsyncReadWriteChannel.h */,
+				BE748DEB203D39F600FE6749 /* OCSPAsyncReadWriteChannel.m */,
+				BE748E0A204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.h */,
+				BE748E0B204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.m */,
+				BE85762C202EB49E00BEBD43 /* OCSPShortcuts.h */,
 			);
 			path = OCSP;
 			sourceTree = "<group>";
@@ -128,12 +140,14 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE748DEC203D39F600FE6749 /* OCSPAsyncReadWriteChannel.h in Headers */,
 				3DC73641202D340D00C186EE /* OCSP.h in Headers */,
 				BE748DDF203D354900FE6749 /* OCSPReadWriteChannel.h in Headers */,
 				BE748DE4203D360E00FE6749 /* OCSPBufferedReadWriteChannel.h in Headers */,
+				BE748E082041614000FE6749 /* OCSPAsyncChannel+Internal.h in Headers */,
+				BE748E0C204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.h in Headers */,
 				BE857628202E954800BEBD43 /* OCSPAsyncChannel.h in Headers */,
 				3DC7365A202D3C5000C186EE /* OCSPChannel.h in Headers */,
-				BE748DE8203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,8 +244,10 @@
 				3DC7365B202D3C5000C186EE /* OCSPChannel.m in Sources */,
 				BE748DE5203D360E00FE6749 /* OCSPBufferedReadWriteChannel.m in Sources */,
 				BE748DE0203D354900FE6749 /* OCSPReadWriteChannel.m in Sources */,
+				BE748E0D204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.m in Sources */,
+				BE748DED203D39F600FE6749 /* OCSPAsyncReadWriteChannel.m in Sources */,
 				BE857629202E954800BEBD43 /* OCSPAsyncChannel.m in Sources */,
-				BE748DE9203D37A300FE6749 /* OCSPAsyncBufferedReadWriteChannel.m in Sources */,
+				BE748E092041614000FE6749 /* OCSPAsyncChannel+Internal.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
