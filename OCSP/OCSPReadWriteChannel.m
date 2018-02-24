@@ -62,16 +62,6 @@ typedef NS_OPTIONS(NSInteger, OCSPReadWriteChannelFlag) {
     pthread_mutex_lock(&_writing);
     pthread_mutex_lock(&_modifying);
     
-    // Reject if the channel has been closed.
-    //
-    if (
-        _isClosed
-        ) {
-        pthread_mutex_unlock(&_modifying);
-        pthread_mutex_unlock(&_writing);
-        return NO;
-    }
-    
     _data = data;
     _dataCount++;
     
@@ -110,16 +100,6 @@ typedef NS_OPTIONS(NSInteger, OCSPReadWriteChannelFlag) {
     //
     pthread_mutex_lock(&_reading);
     pthread_mutex_lock(&_modifying);
-    
-    // Reject if the channel has been closed.
-    //
-    if (
-        _isClosed
-        ) {
-        pthread_mutex_unlock(&_modifying);
-        pthread_mutex_unlock(&_reading);
-        return NO;
-    }
     
     // Wait for
     // data written in by writters
