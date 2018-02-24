@@ -34,34 +34,16 @@ OCSPAsyncReadWriteChannel
     [self close:nil];
 }
 
-- (dispatch_queue_t)defaultCallbackQueue
-{
-    return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-}
-
-- (void)lock:(dispatch_queue_t)queue
-        then:(void(^)(OCSPAsyncContinue unlock))block
-{
-    dispatch_async(queue, ^{
-        dispatch_suspend(queue);
-        block(^{
-            dispatch_resume(queue);
-        });
-    });
-}
-
 - (void)send:(id)data
-        with:(void (^)(BOOL))callback
-{
-   [self send:data
-           on:self.defaultCallbackQueue
-         with:callback];
-}
-
-- (void)send:(id)data
-          on:(dispatch_queue_t)writer
+          on:(dispatch_queue_t)queue
         with:(void(^)(BOOL))callback
 {
+    queue = queue ?: self.defaultCallbackQueue;
+    callback = ^(BOOL ok) {
+        dispatch_async(queue, ^{
+            !callback ?: callback(ok);
+        });
+    };
     OCSPAsyncReadWriteChannelState *
     state = _state;
     OCSPAsyncCondition *
@@ -83,25 +65,25 @@ OCSPAsyncReadWriteChannel
               if (
                   state->_isClosed
                   ) {
-                  !callback ?: callback(NO);
+                  callback(NO);
                   unlock();
                   return;
               }
-              !callback ?: callback(YES);
+              callback(YES);
               unlock();
           }];
      }];
 }
 
-- (void)receiveOn:(void (^)(id, BOOL))callback
-{
-   [self receiveOn:self.defaultCallbackQueue
-              with:callback];
-}
-
 - (void)receiveOn:(dispatch_queue_t)queue
              with:(void(^)(id, BOOL))callback
 {
+    queue = queue ?: self.defaultCallbackQueue;
+    callback = ^(id data, BOOL ok) {
+        dispatch_async(queue, ^{
+            !callback ?: callback(data, ok);
+         });
+    };
     OCSPAsyncReadWriteChannelState *
     state = _state;
     OCSPAsyncCondition *
@@ -120,11 +102,11 @@ OCSPAsyncReadWriteChannel
               if (
                   state->_isClosed
                   ) {
-                  !callback ?: callback(nil, NO);
+                  callback(nil, NO);
                   unlock();
                   return;
               }
-              !callback ?: callback(state->_data, YES);
+              callback(state->_data, YES);
               state->_dataCount--;
               [readOut signal];
               unlock();
@@ -135,6 +117,12 @@ OCSPAsyncReadWriteChannel
 - (void)closeOn:(dispatch_queue_t)queue
            with:(void(^)(BOOL ok))callback
 {
+    queue = queue ?: self.defaultCallbackQueue;
+    callback = ^(BOOL ok) {
+        dispatch_async(queue, ^{
+            !callback ?: callback(ok);
+        });
+    };
     OCSPAsyncReadWriteChannelState *
     state = _state;
     OCSPAsyncCondition *
@@ -147,21 +135,54 @@ OCSPAsyncReadWriteChannel
          if (
              state->_isClosed
              ) {
-             !callback ?: callback(NO);
+             callback(NO);
              unlock();
              return;
          }
          state->_isClosed = YES;
          [writtenIn signal];
          [readOut signal];
+         callback(NO);
          unlock();
      }];
 }
+
+// MARK: - Default
 
 - (void)close:(void(^)(BOOL ok))callback
 {
    [self closeOn:self.defaultCallbackQueue
             with:callback];
+}
+
+- (void)receiveOn:(void (^)(id, BOOL))callback
+{
+    [self receiveOn:self.defaultCallbackQueue
+               with:callback];
+}
+
+- (void)send:(id)data
+        with:(void (^)(BOOL))callback
+{
+    [self send:data
+            on:self.defaultCallbackQueue
+          with:callback];
+}
+
+- (dispatch_queue_t)defaultCallbackQueue
+{
+    return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+}
+
+- (void)lock:(dispatch_queue_t)queue
+        then:(void(^)(OCSPAsyncContinue unlock))block
+{
+    dispatch_async(queue, ^{
+        dispatch_suspend(queue);
+        block(^{
+            dispatch_resume(queue);
+        });
+    });
 }
 
 @end

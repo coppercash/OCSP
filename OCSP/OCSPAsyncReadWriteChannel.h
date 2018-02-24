@@ -14,12 +14,12 @@
     _writing,   // exlusive writer at any given time
     _reading;   // exlusive reader at any given time
 }
-- (void)send:(Data)data
-        with:(void(^)(BOOL ok))callback;
-- (void)send:(Data)data
-          on:(dispatch_queue_t)queue
-        with:(void(^)(BOOL ok))callback;
-- (void)close:(void(^)(BOOL ok))callback;
-- (void)closeOn:(dispatch_queue_t)queue
-           with:(void(^)(BOOL ok))callback;
+- (void)send:(Data __nullable)data
+        with:(void(^__nullable)(BOOL ok))callback;
+- (void)send:(Data __nullable)data
+          on:(dispatch_queue_t __nonnull)queue
+        with:(void(^__nonnull)(BOOL ok))callback;
+- (void)close:(void(^__nullable)(BOOL ok))callback;
+- (void)closeOn:(dispatch_queue_t __nonnull)queue
+           with:(void(^__nonnull)(BOOL ok))callback;
 @end
