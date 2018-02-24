@@ -8,7 +8,7 @@
 
 #import "OCSPChannel.h"
 
-@interface OCSPReadWriteChannel<Data : id> : OCSPChannel
+@interface OCSPReadWriteChannel<Data> : OCSPChannel<Data>
 {
     pthread_mutex_t
     _writing,   // exlusive writer at any given time

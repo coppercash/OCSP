@@ -24,9 +24,10 @@ OCSPAsyncChannel<Data : id> : NSObject
     OCSPAsyncChannelState __kindof *
     _state;
 }
-- (void)receiveOn:(void(^__nullable)(Data __nullable data, BOOL ok))callback;
+- (void)receive:(void(^__nullable)(Data __nullable data, BOOL ok))callback;
 - (void)receiveOn:(dispatch_queue_t __nonnull)queue
              with:(void(^__nullable)(Data __nullable data, BOOL ok))callback;
+
 @end
 
 

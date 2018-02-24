@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <OCSP/OCSP.h>
+#import <sched.h>
 
 @interface OCSPChannelTests : XCTestCase
 @property (nonatomic, strong) dispatch_queue_t cq;
@@ -24,6 +25,7 @@
 
 - (void)test_receiveValueAfterSending
 {
+    sched_yield();
     XCTestExpectation *
     rEx = [self expectationWithDescription:@"recieve"];
     XCTestExpectation *

@@ -22,14 +22,14 @@
     return self;
 }
 
-- (void)receiveOn:(void(^)(id, BOOL))callback
+- (void)receive:(void(^)(id, BOOL))callback
 {
     callback ?: callback(nil, NO);
     
 }
 
 - (void)receiveOn:(dispatch_queue_t)queue
-             with:(void(^)(id, BOOL))callback
+               with:(void(^)(id, BOOL))callback
 {
     callback ?: callback(nil, NO);
 }

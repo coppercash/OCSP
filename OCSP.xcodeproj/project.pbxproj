@@ -22,9 +22,10 @@
 		BE748E092041614000FE6749 /* OCSPAsyncChannel+Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = BE748E072041614000FE6749 /* OCSPAsyncChannel+Internal.m */; };
 		BE748E0C204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = BE748E0A204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.h */; };
 		BE748E0D204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = BE748E0B204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.m */; };
+		BE748E132042268200FE6749 /* AsyncChannelTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE748E122042268200FE6749 /* AsyncChannelTestCase.swift */; };
+		BE748E182042462400FE6749 /* AsyncChannelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE748E172042462400FE6749 /* AsyncChannelTests.swift */; };
 		BE857628202E954800BEBD43 /* OCSPAsyncChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */; };
 		BE857629202E954800BEBD43 /* OCSPAsyncChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */; };
-		BE85762B202E9FAC00BEBD43 /* OCSPAsyncChannelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BE85762A202E9FAC00BEBD43 /* OCSPAsyncChannelTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,9 +57,11 @@
 		BE748E072041614000FE6749 /* OCSPAsyncChannel+Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCSPAsyncChannel+Internal.m"; sourceTree = "<group>"; };
 		BE748E0A204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCSPAsyncReadWriteChannel+Internal.h"; sourceTree = "<group>"; };
 		BE748E0B204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCSPAsyncReadWriteChannel+Internal.m"; sourceTree = "<group>"; };
+		BE748E112042268200FE6749 /* OCSPTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCSPTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		BE748E122042268200FE6749 /* AsyncChannelTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncChannelTestCase.swift; sourceTree = "<group>"; };
+		BE748E172042462400FE6749 /* AsyncChannelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncChannelTests.swift; sourceTree = "<group>"; };
 		BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncChannel.h; sourceTree = "<group>"; };
 		BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncChannel.m; sourceTree = "<group>"; };
-		BE85762A202E9FAC00BEBD43 /* OCSPAsyncChannelTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncChannelTests.m; sourceTree = "<group>"; };
 		BE85762C202EB49E00BEBD43 /* OCSPShortcuts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPShortcuts.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -127,8 +130,10 @@
 			isa = PBXGroup;
 			children = (
 				3DC7364F202D342500C186EE /* OCSPChannelTests.m */,
-				BE85762A202E9FAC00BEBD43 /* OCSPAsyncChannelTests.m */,
+				BE748E172042462400FE6749 /* AsyncChannelTests.swift */,
+				BE748E122042268200FE6749 /* AsyncChannelTestCase.swift */,
 				3DC73651202D342500C186EE /* Info.plist */,
+				BE748E112042268200FE6749 /* OCSPTests-Bridging-Header.h */,
 			);
 			path = OCSPTests;
 			sourceTree = "<group>";
@@ -200,10 +205,12 @@
 				TargetAttributes = {
 					3DC7363C202D340D00C186EE = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
 					3DC7364C202D342500C186EE = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -256,7 +263,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DC73650202D342500C186EE /* OCSPChannelTests.m in Sources */,
-				BE85762B202E9FAC00BEBD43 /* OCSPAsyncChannelTests.m in Sources */,
+				BE748E182042462400FE6749 /* AsyncChannelTests.swift in Sources */,
+				BE748E132042268200FE6749 /* AsyncChannelTestCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,24 +385,34 @@
 		3DC73647202D340D00C186EE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				EXECUTABLE_PREFIX = lib;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "OCSP/OCSP-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		3DC73648202D340D00C186EE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				EXECUTABLE_PREFIX = lib;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "OCSP/OCSP-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
 		3DC73656202D342500C186EE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
@@ -402,12 +420,16 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.coppercash.OCSPTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "OCSPTests/OCSPTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		3DC73657202D342500C186EE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
@@ -415,6 +437,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.coppercash.OCSPTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "OCSPTests/OCSPTests-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

@@ -142,7 +142,7 @@ OCSPAsyncReadWriteChannel
          state->_isClosed = YES;
          [writtenIn signal];
          [readOut signal];
-         callback(NO);
+         callback(YES);
          unlock();
      }];
 }
@@ -155,7 +155,7 @@ OCSPAsyncReadWriteChannel
             with:callback];
 }
 
-- (void)receiveOn:(void (^)(id, BOOL))callback
+- (void)receive:(void (^)(id, BOOL))callback
 {
     [self receiveOn:self.defaultCallbackQueue
                with:callback];
