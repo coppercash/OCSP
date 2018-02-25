@@ -85,19 +85,20 @@ struct
         return result
     }
     mutating func
-        start
-        () {
+        start()
+    {
         test(buffer, expectations)
         test = nil
     }
     mutating func
-        wait
-        () {
+        wait()
+    {
         expect(expectations.array)
         expect = nil
     }
     mutating func
-        run() ->Result {
+        run() ->Result
+    {
         start()
         wait()
         return result
@@ -189,6 +190,8 @@ class
         @escaping (Act) -> XCTestExpectation
         ) -> Void
     init() {}
+    let
+    callbackQ = DispatchQueue(label: "ocsp.aync_chan.test")
     var
     answer = [Act](),
     test :Test = { (_) in }
@@ -198,13 +201,14 @@ class
         let
         last = test,
         idx = answer.count,
+        cbQ = callbackQ,
         act = Act.send(ok, data)
         answer.append(act)
         test = { (chan, emit, expect) in
             last(chan, emit, expect);
             let
             exp = expect(act)
-            chan.send(data) {
+            chan.send(data, on: cbQ) {
                 emit(idx, Act.send($0, data))
                 exp.fulfill()
             }
@@ -217,13 +221,14 @@ class
         let
         last = test,
         idx = answer.count,
+        cbQ = callbackQ,
         act = Act.receive(ok, data)
         answer.append(act)
         test = { (chan, emit, expect) in
             last(chan, emit, expect);
             let
             exp = expect(act)
-            chan.receive {
+            chan.receive(on: cbQ) {
                 emit(idx, Act.receive($1, $0))
                 exp.fulfill()
             }
@@ -236,13 +241,14 @@ class
         let
         last = test,
         idx = answer.count,
+        cbQ = callbackQ,
         act = Act.close(ok)
         answer.append(act)
         test = { (chan, emit, expect) in
             last(chan, emit, expect);
             let
             exp = expect(act)
-            chan.close {
+            chan.close(on: cbQ) {
                 emit(idx, Act.close($0))
                 exp.fulfill()
             }
