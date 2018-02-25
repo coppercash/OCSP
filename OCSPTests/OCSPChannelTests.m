@@ -8,10 +8,10 @@
 
 #import <XCTest/XCTest.h>
 #import <OCSP/OCSP.h>
-#import <OCSP/OCSPShortcut.h>
+#import <sched.h>
 
 @interface OCSPChannelTests : XCTestCase
-@property (nonatomic, strong) dispatch_queue_t cq;
+@property (nonatomic, strong) dispatch_queue_t cQ;
 @property (nonatomic, assign) dispatch_time_t nano;
 @end
 @implementation OCSPChannelTests
@@ -19,7 +19,7 @@
 - (void)setUp
 {
     [super setUp];
-    _cq = dispatch_queue_create(NSStringFromSelector(_cmd).UTF8String, DISPATCH_QUEUE_CONCURRENT);
+    _cQ = dispatch_queue_create(NSStringFromSelector(_cmd).UTF8String, DISPATCH_QUEUE_CONCURRENT);
     _nano = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_USEC);
 }
 
@@ -36,8 +36,8 @@
     received = NO;
     NSNumber __block *
     value = nil;
-    dispatch_async(self.cq, ^{
-        dispatch_after(self.nano, self.cq, ^{
+    dispatch_async(self.cQ, ^{
+        dispatch_after(self.nano, self.cQ, ^{
             received = [ch receive:&value];
             [rEx fulfill];
         });
@@ -65,8 +65,8 @@
     received = NO;
     NSNumber __block *
     value = nil;
-    dispatch_async(self.cq, ^{
-        dispatch_after(self.nano, self.cq, ^{
+    dispatch_async(self.cQ, ^{
+        dispatch_after(self.nano, self.cQ, ^{
             sent = [ch send:@42];
             [sEx fulfill];
         });
@@ -94,17 +94,22 @@
 - (void)test_rejectSendingsWaitingForReceivingOnClosing
 {
     XCTestExpectation *
-    ex = [self expectationWithDescription:@"send"];
+    cEx = [self expectationWithDescription:@"close"];
+    XCTestExpectation *
+    sEx = [self expectationWithDescription:@"send"];
     RWChan<NSNumber *> *
     ch = [[RWChan alloc] init];
     BOOL __block
     ok = YES;
-    dispatch_async(self.cq, ^{
+    dispatch_async(self.cQ, ^{
+        dispatch_after(self.nano, self.cQ, ^{
+            [ch close];
+            [cEx fulfill];
+        });
         ok = [ch send:@42];
-        [ex fulfill];
+        [sEx fulfill];
     });
-    [ch close];
-    [self waitForExpectations:@[ex]
+    [self waitForExpectations:@[cEx, sEx]
                       timeout:1.0];
     XCTAssertFalse(ok);
 }
@@ -125,19 +130,24 @@
 - (void)test_rejectReceivingsWaitingForSendingOnClosing
 {
     XCTestExpectation *
-    ex = [self expectationWithDescription:@"receive"];
+    cEx = [self expectationWithDescription:@"close"];
+    XCTestExpectation *
+    rEx = [self expectationWithDescription:@"receive"];
     RWChan<NSNumber *> *
     ch = [[RWChan alloc] init];
     BOOL __block
     ok = YES;
     NSNumber __block *
     value = nil;
-    dispatch_async(self.cq, ^{
+    dispatch_async(self.cQ, ^{
+        dispatch_after(self.nano, self.cQ, ^{
+            [ch close];
+            [cEx fulfill];
+        });
         ok = [ch receive:&value];
-        [ex fulfill];
+        [rEx fulfill];
     });
-    [ch close];
-    [self waitForExpectations:@[ex]
+    [self waitForExpectations:@[cEx, rEx]
                       timeout:1.0];
     XCTAssertFalse(ok);
     XCTAssertNil(value);
@@ -147,20 +157,29 @@
 {
     XCTestExpectation *
     ex = [self expectationWithDescription:@"receive"];
+    XCTestExpectation *
+    rEx = [self expectationWithDescription:@"release"];
     RWChan<NSNumber *> *
     ch = [[RWChan alloc] init];
     BOOL __block
     ok = YES;
     NSNumber __block *
     value = nil;
-    RWChan<NSNumber *> __weak *
-    p = ch;
-    dispatch_async(self.cq, ^{
-        ok = [p receive:&value];
+    __typeof(ch) __weak
+    weak = ch;
+    dispatch_async(self.cQ, ^{
+        __typeof(ch) __weak
+        strong = weak;
+        dispatch_after(self.nano, self.cQ, ^{
+            [strong description];
+            [rEx fulfill];
+        });
+        strong = nil;
+        ok = [weak receive:&value];
         [ex fulfill];
     });
     ch = nil;
-    [self waitForExpectations:@[ex]
+    [self waitForExpectations:@[rEx, ex]
                       timeout:1.0];
     XCTAssertFalse(ok);
     XCTAssertNil(value);
@@ -172,7 +191,7 @@
     ex = [self expectationWithDescription:@"receive"];
     RWChan<NSNumber *> *
     ch = [[RWChan alloc] init];
-    dispatch_async(self.cq, ^{
+    dispatch_async(self.cQ, ^{
         while (
                [ch receive:NULL]
                ) { }

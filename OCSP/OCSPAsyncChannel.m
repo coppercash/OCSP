@@ -6,73 +6,33 @@
 //  Copyright © 2018 coppercash. All rights reserved.
 //
 
-#import "OCSPAsyncChannel.h"
+#import "OCSPAsyncChannel+Internal.h"
 
-@implementation OCSPAsyncChannel
-
-- (void)receiveWithOn:(dispatch_queue_t)queue
-             callback:(void(^)(id, BOOL))callback
-{
-    if (callback) { callback(nil, NO); }
-}
-
-@end
-
-@implementation OCSPAsyncReadWriteChannel {
-    dispatch_queue_t
-    _writerWatch,
-    _readerWatch;
-}
+@implementation
+OCSPAsyncChannel
 
 - (instancetype)init
 {
     if (!(
           self = [super init]
-          )) { return nil; }
-    _writerWatch = dispatch_queue_create
-    (
-     "ocsp.ayncchannel.watch.writer",
-     DISPATCH_QUEUE_SERIAL
-     );
-    _readerWatch = dispatch_queue_create
-    (
-     "ocsp.ayncchannel.watch.reader",
-     DISPATCH_QUEUE_SERIAL
-    );
+          )) {  return nil; }
+    _modifying = dispatch_queue_create("ocsp.a_chan.modifying", DISPATCH_QUEUE_SERIAL);
+    _readOut = [[OCSPAsyncCondition alloc] initWithSignalQueue:_modifying];
+    _writtenIn = [[OCSPAsyncCondition alloc] initWithSignalQueue:_modifying];
+    _state = [[OCSPAsyncChannelState alloc] init];
     return self;
 }
 
-- (void)receiveWithOn:(dispatch_queue_t)queue
-             callback:(void(^)(id, BOOL))callback;
+- (void)receive:(void(^)(id, BOOL))callback
 {
-    dispatch_async(_readerWatch, ^{
-        id
-        data;
-        BOOL
-        ok = [self receive:&data];
-        if (!(
-              callback
-              )) { return; }
-        dispatch_async(queue, ^{
-            callback(data, ok);
-        });
-    });
+    callback ?: callback(nil, NO);
+    
 }
 
-- (void)send:(id)data
-      withOn:(dispatch_queue_t)queue
-    callback:(void(^)(BOOL ok))callback
+- (void)receiveOn:(dispatch_queue_t)queue
+               with:(void(^)(id, BOOL))callback
 {
-    dispatch_async(_writerWatch, ^{
-        BOOL
-        ok = [self send:data];
-        if (!(
-              callback
-              )) { return; }
-        dispatch_async(queue, ^{
-            callback(ok);
-        });
-    });
+    callback ?: callback(nil, NO);
 }
 
 @end

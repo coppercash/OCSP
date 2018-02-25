@@ -8,15 +8,26 @@
 
 #import "OCSPChannel.h"
 
-@interface OCSPAsyncChannel<Data : id> : OCSPChannel
-- (void)receiveWithOn:(dispatch_queue_t __nonnull)queue
-             callback:(void(^__nullable)(Data __nullable data, BOOL ok))callback;
+@class
+OCSPAsyncCondition,
+OCSPAsyncChannelState;
+@interface
+OCSPAsyncChannel<Data : id> : NSObject
+{
+@protected
+    dispatch_queue_t
+    _modifying; // exlusive modifier (reader or writer) at any given time
+    OCSPAsyncCondition *
+    _readOut;   // signal on data read out (or channel closed)
+    OCSPAsyncCondition *
+    _writtenIn; // signal on data writren in (or channel closed)
+    OCSPAsyncChannelState __kindof *
+    _state;
+}
+- (void)receive:(void(^__nullable)(Data __nullable data, BOOL ok))callback;
+- (void)receiveOn:(dispatch_queue_t __nonnull)queue
+             with:(void(^__nullable)(Data __nullable data, BOOL ok))callback;
+
 @end
 
-@interface OCSPAsyncReadWriteChannel<Data : id> : OCSPReadWriteChannel
-- (void)receiveWithOn:(dispatch_queue_t __nonnull)queue
-             callback:(void(^__nullable)(Data __nullable data, BOOL ok))callback;
-- (void)send:(Data __nullable)data
-      withOn:(dispatch_queue_t __nonnull)queue
-    callback:(void(^__nullable)(BOOL ok))callback;
-@end
+
