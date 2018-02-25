@@ -8,7 +8,8 @@
 
 #import "OCSPChannel.h"
 
-@interface OCSPBufferedReadWriteChannel<Data : id> : OCSPChannel
+@interface
+OCSPBufferedReadWriteChannel<Data : id> : OCSPChannel
 {
     NSMutableArray *
     _queue;

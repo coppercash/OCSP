@@ -8,7 +8,8 @@
 
 #import "OCSPAsyncChannel.h"
 
-@interface OCSPAsyncReadWriteChannel<Data> : OCSPAsyncChannel<Data>
+@interface
+OCSPAsyncReadWriteChannel<Data> : OCSPAsyncChannel<Data>
 {
     dispatch_queue_t
     _writing,   // exlusive writer at any given time

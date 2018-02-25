@@ -11,7 +11,7 @@
 #import <sched.h>
 
 @interface OCSPChannelTests : XCTestCase
-@property (nonatomic, strong) dispatch_queue_t cq;
+@property (nonatomic, strong) dispatch_queue_t cQ;
 @property (nonatomic, assign) dispatch_time_t nano;
 @end
 @implementation OCSPChannelTests
@@ -19,13 +19,12 @@
 - (void)setUp
 {
     [super setUp];
-    _cq = dispatch_queue_create(NSStringFromSelector(_cmd).UTF8String, DISPATCH_QUEUE_CONCURRENT);
+    _cQ = dispatch_queue_create(NSStringFromSelector(_cmd).UTF8String, DISPATCH_QUEUE_CONCURRENT);
     _nano = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_USEC);
 }
 
 - (void)test_receiveValueAfterSending
 {
-    sched_yield();
     XCTestExpectation *
     rEx = [self expectationWithDescription:@"recieve"];
     XCTestExpectation *
@@ -37,8 +36,8 @@
     received = NO;
     NSNumber __block *
     value = nil;
-    dispatch_async(self.cq, ^{
-        dispatch_after(self.nano, self.cq, ^{
+    dispatch_async(self.cQ, ^{
+        dispatch_after(self.nano, self.cQ, ^{
             received = [ch receive:&value];
             [rEx fulfill];
         });
@@ -66,8 +65,8 @@
     received = NO;
     NSNumber __block *
     value = nil;
-    dispatch_async(self.cq, ^{
-        dispatch_after(self.nano, self.cq, ^{
+    dispatch_async(self.cQ, ^{
+        dispatch_after(self.nano, self.cQ, ^{
             sent = [ch send:@42];
             [sEx fulfill];
         });
@@ -102,8 +101,8 @@
     ch = [[RWChan alloc] init];
     BOOL __block
     ok = YES;
-    dispatch_async(self.cq, ^{
-        dispatch_after(self.nano, self.cq, ^{
+    dispatch_async(self.cQ, ^{
+        dispatch_after(self.nano, self.cQ, ^{
             [ch close];
             [cEx fulfill];
         });
@@ -140,8 +139,8 @@
     ok = YES;
     NSNumber __block *
     value = nil;
-    dispatch_async(self.cq, ^{
-        dispatch_after(self.nano, self.cq, ^{
+    dispatch_async(self.cQ, ^{
+        dispatch_after(self.nano, self.cQ, ^{
             [ch close];
             [cEx fulfill];
         });
@@ -168,10 +167,10 @@
     value = nil;
     __typeof(ch) __weak
     weak = ch;
-    dispatch_async(self.cq, ^{
+    dispatch_async(self.cQ, ^{
         __typeof(ch) __weak
         strong = weak;
-        dispatch_after(self.nano, self.cq, ^{
+        dispatch_after(self.nano, self.cQ, ^{
             [strong description];
             [rEx fulfill];
         });
@@ -192,7 +191,7 @@
     ex = [self expectationWithDescription:@"receive"];
     RWChan<NSNumber *> *
     ch = [[RWChan alloc] init];
-    dispatch_async(self.cq, ^{
+    dispatch_async(self.cQ, ^{
         while (
                [ch receive:NULL]
                ) { }

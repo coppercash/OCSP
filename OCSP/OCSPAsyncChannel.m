@@ -8,7 +8,8 @@
 
 #import "OCSPAsyncChannel+Internal.h"
 
-@implementation OCSPAsyncChannel
+@implementation
+OCSPAsyncChannel
 
 - (instancetype)init
 {

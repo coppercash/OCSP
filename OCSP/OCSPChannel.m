@@ -10,7 +10,8 @@
 #import "OCSPChannel+Internal.h"
 #import <pthread/pthread.h>
 
-@implementation OCSPChannel 
+@implementation
+OCSPChannel 
 
 - (instancetype)init
 {

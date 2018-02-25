@@ -16,7 +16,8 @@ typedef NS_OPTIONS(NSInteger, OCSPReadWriteChannelFlag) {
     OCSPReadWriteChannelFlagWriting = OCSPReadWriteChannelFlagReading << 1,
 };
 
-@implementation OCSPReadWriteChannel
+@implementation
+OCSPReadWriteChannel
 
 - (instancetype)init
 {

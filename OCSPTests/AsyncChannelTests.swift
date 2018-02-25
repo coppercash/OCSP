@@ -8,14 +8,16 @@
 
 import XCTest
 
-class AsyncChannelTests: XCTestCase {
+class
+    AsyncChannelTests: XCTestCase
+{
     typealias
         Chan = OCSPAsyncReadWriteChannel
     typealias
         Builder = AsyncChannelTestCaseBuilder
     func
-        test_receiveValueAfterSending
-        () {
+        test_receiveValueAfterSending()
+    {
         let
         chan = Chan<NSNumber>()
         var
@@ -26,8 +28,8 @@ class AsyncChannelTests: XCTestCase {
         XCTAssertEqual(c.run(), c.answer)
     }
     func
-        test_sendValueAfterReceiving
-        () {
+        test_sendValueAfterReceiving()
+    {
         let
         chan = Chan<NSNumber>()
         var
@@ -38,8 +40,8 @@ class AsyncChannelTests: XCTestCase {
         XCTAssertEqual(c.run(), c.answer)
     }
     func
-        test_rejectReceivingsAfterClosing
-        () {
+        test_rejectReceivingsAfterClosing()
+    {
         let
         chan = Chan<NSNumber>()
         var
@@ -50,8 +52,8 @@ class AsyncChannelTests: XCTestCase {
         XCTAssertEqual(c.run(), c.answer)
     }
     func
-        test_rejectReceivingsWaitingForSendingOnClosing
-        () {
+        test_rejectReceivingsWaitingForSendingOnClosing()
+    {
         let
         chan = Chan<NSNumber>()
         var
@@ -62,8 +64,8 @@ class AsyncChannelTests: XCTestCase {
         XCTAssertEqual(c.run(), c.answer)
     }
     func
-        test_rejectSendingAfterClosing
-        () {
+        test_rejectSendingAfterClosing()
+    {
         let
         chan = Chan<NSNumber>()
         var
@@ -74,7 +76,8 @@ class AsyncChannelTests: XCTestCase {
         XCTAssertEqual(c.run(), c.answer)
     }
     func
-        test_rejectSendingWaitingForReceivingOnClosing() {
+        test_rejectSendingWaitingForReceivingOnClosing()
+    {
         let
         chan = Chan<NSNumber>()
         var
@@ -103,7 +106,8 @@ class AsyncChannelTests: XCTestCase {
         XCTAssertEqual(c.run(), c.answer)
     }
     func
-        test_makeReceivingsWait() {
+        test_makeReceivingsWait()
+    {
         let
         chan = Chan<NSNumber>()
         var
@@ -120,8 +124,8 @@ class AsyncChannelTests: XCTestCase {
         XCTAssertEqual(c.run(), c.answer)
     }
     func
-        test_rejectReceivingsOnDeallocating
-        () {
+        test_rejectReceivingsOnDeallocating()
+    {
         var
         chan :Chan<NSNumber> = Chan()
         var

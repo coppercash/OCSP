@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OCSPChannel<Data : id> : NSObject
+@interface
+OCSPChannel<Data : id> : NSObject
 {
 @protected
     pthread_mutex_t
