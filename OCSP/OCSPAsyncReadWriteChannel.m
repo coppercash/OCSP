@@ -184,5 +184,105 @@ OCSPAsyncReadWriteChannel
         });
     });
 }
+/*
++ (void)receive
+{
+    (writtenIn | selectedOut)
+    {
+        if lose {
+            leave()
+        }
+        else if closed {
+            callback(nil, NO);
+            leave()
+        }
+        else if data {
+            data = nil
+            callback(data, YES);
+            readOut broadcast
+            selection.done = YES
+            selectedOut broadcast
+            leave()
+        }
+        else {
+            wait()
+        }
+    }
+}
 
++ (void)receive
+{
+    writtenIn
+    {
+        if closed {
+            callback(nil, NO);
+            leave()
+        }
+        else if data {
+            callback(data, YES);
+            done()
+        }
+        else {
+            leave()
+        }
+    }
+}
+
++ (void)send
+{
+    writting lock
+    {
+        wrttienIn | readOut
+        {
+            if closed {
+                callback(NO);
+                leave()
+            }
+            else if empty {
+                data = data
+                callback(YES);
+                leave()
+                writtenIn broadcast
+            }
+            else {
+                wait()
+            }
+        }
+    }
+}
+
++ (void)send
+{
+    writting lock
+    {
+        writtenIn | readOut | selected
+        {
+            if lose {
+                leave()
+            }
+            else if closed {
+                callback(NO);
+                leave()
+            }
+            else if empty {
+                data = data
+                callback(YES);
+                writtenIn broadcast
+                selected broadcast
+                leave()
+                unlock()
+            }
+            else {
+                selection.wait()
+                wait()
+            }
+        }
+    }
+}
+
++ (void)select
+{
+    
+}
+*/
 @end
