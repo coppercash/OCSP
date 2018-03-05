@@ -7,13 +7,25 @@
 //
 
 #import "OCSPAsyncReadWriteChannel.h"
-#import "OCSPAsyncChannel+Internal.h"
+#import "OCSPAsyncChannel.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+typedef
+NS_ENUM(NSInteger, OCSPAsyncChannelSlotState)
+{
+    OCSPAsyncChannelSlotStateEmpty = 0,
+    OCSPAsyncChannelSlotStateFilled,
+    OCSPAsyncChannelSlotStateClosed,
+};
 
 @interface
-OCSPAsyncReadWriteChannelState : OCSPAsyncChannelState
-{
-@public
-    id
-    _data;
-}
+OCSPAsyncChannelSlot : NSObject
+@property (readonly, nullable) id data;
+@property (readonly) OCSPAsyncChannelSlotState state;
+- (void)empty;
+- (void)fillWithData:(id __nullable)data;
+- (void)close;
 @end
+
+NS_ASSUME_NONNULL_END

@@ -8,19 +8,34 @@
 
 #import "OCSPAsyncChannel.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface
-OCSPAsyncReadWriteChannel<Data> : OCSPAsyncChannel<Data>
+OCSPAsyncReadWriteChannel<__covariant Data> : OCSPAsyncChannel<Data>
 {
-    dispatch_queue_t
-    _writing,   // exlusive writer at any given time
-    _reading;   // exlusive reader at any given time
 }
 - (void)send:(Data __nullable)data
-        with:(void(^__nullable)(BOOL ok))callback;
+        with:(void(^)(BOOL ok))callback;
 - (void)send:(Data __nullable)data
-          on:(dispatch_queue_t __nonnull)queue
-        with:(void(^__nonnull)(BOOL ok))callback;
-- (void)close:(void(^__nullable)(BOOL ok))callback;
-- (void)closeOn:(dispatch_queue_t __nonnull)queue
-           with:(void(^__nonnull)(BOOL ok))callback;
+          on:(dispatch_queue_t)queue
+        with:(void(^)(BOOL ok))callback;
+- (void)close:(void(^)(BOOL ok))callback;
+- (void)closeOn:(dispatch_queue_t)queue
+           with:(void(^)(BOOL ok))callback;
 @end
+
+@interface OCSPAsyncSelectionBuilder : NSObject
+@end
+
+typedef
+void(^OCSPAsyncSelectBuildup)(OCSPAsyncSelectionBuilder *case_);
+FOUNDATION_EXPORT const
+void(^OCSPAsyncSelect)(OCSPAsyncSelectBuildup);
+
+@interface
+OCSPAsyncReadWriteChannel<Data> (Select)
+- (void)receiveIn:(OCSPAsyncSelectionBuilder *)case_
+             with:(void(^__nullable)(Data __nullable data, BOOL ok))callback;
+@end
+
+NS_ASSUME_NONNULL_END

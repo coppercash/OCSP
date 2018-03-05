@@ -9,15 +9,31 @@
 #import "OCSPAsyncReadWriteChannel+Internal.h"
 
 @implementation
-OCSPAsyncReadWriteChannelState
+OCSPAsyncChannelSlot {
+    id
+    _data;
+    OCSPAsyncChannelSlotState
+    _state;
+}
+- (id)data { return _data; }
+- (OCSPAsyncChannelSlotState)state { return _state; }
 
-- (instancetype)init
+- (void)empty
 {
-    if (!(
-          self = [super init]
-          )) {  return nil; }
     _data = nil;
-    return self;
+    _state = OCSPAsyncChannelSlotStateEmpty;
+}
+
+- (void)fillWithData:(id)data
+{
+    _data = data;
+    _state = OCSPAsyncChannelSlotStateFilled;
+}
+
+- (void)close
+{
+    _data = nil;
+    _state = OCSPAsyncChannelSlotStateClosed;
 }
 
 @end

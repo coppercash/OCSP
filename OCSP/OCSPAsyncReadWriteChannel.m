@@ -7,282 +7,326 @@
 //
 
 #import "OCSPAsyncReadWriteChannel+Internal.h"
+#import "OCSPAsyncLock.h"
+#import "OCSPAsyncCondition.h"
+
+@interface
+OCSPAsyncSelection : NSObject
+@property (readonly) BOOL isDetermined;
+- (void)determine;
+@end
+@implementation
+OCSPAsyncSelection
+{
+    BOOL
+    _isDetermined;
+}
+
+- (void)determine
+{
+    _isDetermined = YES;
+}
+
+- (BOOL)isDetermined { return _isDetermined; }
+
+@end
 
 typedef
-void(^OCSPAsyncContinue)(void);
-typedef
-void(^OCSPConitnuationPassingBlock)(OCSPAsyncContinue);
-
+id Data;
 @implementation
 OCSPAsyncReadWriteChannel
+{
+    OCSPAsyncChannelSlot *
+    _slot;
+    OCSPAsyncLock *
+    _writing;
+    OCSPAsyncLock *
+    _communicating;
+    OCSPAsyncCondition *
+    _writtenIn;
+    OCSPAsyncCondition *
+    _readOut;
+}
 
 - (instancetype)init
 {
     if (!(
           self = [super init]
           )) {  return nil; }
-    _writing = dispatch_queue_create("ocsp.arw_chan.writing", DISPATCH_QUEUE_SERIAL);
-    dispatch_set_target_queue(_writing, _modifying);
-    _reading = dispatch_queue_create("ocsp.arw_chan.writing", DISPATCH_QUEUE_SERIAL);
-    dispatch_set_target_queue(_reading, _modifying);
-    _state = [[OCSPAsyncReadWriteChannelState alloc] init];
+    _slot = [[OCSPAsyncChannelSlot alloc] init];
+    _writing = [[OCSPAsyncLock alloc] init];
+    _communicating = [[OCSPAsyncLock alloc] init];
+    _writtenIn = [[OCSPAsyncCondition alloc] init];
+    _readOut = [[OCSPAsyncCondition alloc] init];
     return self;
 }
 
 - (void)dealloc
 {
-    [self close:nil];
+    [self.class close
+     :_slot
+     :_communicating
+     :_writtenIn
+     :^(BOOL _) {}
+     ];
 }
 
-- (void)send:(id)data
-          on:(dispatch_queue_t)queue
-        with:(void(^)(BOOL))callback
+// MARK: - Public
+
+- (void)send:(Data __nullable)data
+        with:(void(^)(BOOL ok))callback
 {
-    queue = queue ?: self.defaultCallbackQueue;
-    callback = ^(BOOL ok) {
-        dispatch_async(queue, ^{
-            !callback ?: callback(ok);
-        });
-    };
-    OCSPAsyncReadWriteChannelState *
-    state = _state;
-    OCSPAsyncCondition *
-    writtenIn = _writtenIn;
-    OCSPAsyncCondition *
-    readOut = _readOut;
-    [self lock:_writing
-          then:
-     ^(OCSPAsyncContinue unlock) {
-         state->_data = data;
-         state->_dataCount++;
-         [writtenIn signal];
-         [readOut waitUntil:
-          ^BOOL{
-              return state->_isClosed || (state->_dataCount == 0);
-          }
-                       then:
-          ^{
-              if (
-                  state->_isClosed
-                  ) {
-                  callback(NO);
-                  unlock();
-                  return;
-              }
-              callback(YES);
-              unlock();
-          }];
-     }];
+    [self send:data
+            on:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+          with:callback];
+}
+
+- (void)send:(Data __nullable)data
+          on:(dispatch_queue_t)queue
+        with:(void(^)(BOOL ok))callback
+{
+    [self.class send
+     :data
+     :_slot
+     :_writing
+     :_communicating
+     :_writtenIn
+     :_readOut
+     :nil
+     :nil
+     :nil
+     :
+     ^(BOOL ok) {
+         dispatch_async(queue, ^{
+             callback(ok);
+         });
+     }
+     ];
+}
+
+- (void)receive:(void(^)(Data __nullable data, BOOL ok))callback
+{
+   [self receiveOn:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+              with:callback];
 }
 
 - (void)receiveOn:(dispatch_queue_t)queue
-             with:(void(^)(id, BOOL))callback
+             with:(void(^)(Data __nullable data, BOOL ok))callback
 {
-    queue = queue ?: self.defaultCallbackQueue;
-    callback = ^(id data, BOOL ok) {
+   [self.class receive
+    :_slot
+    :_communicating
+    :_writtenIn
+    :_readOut
+    :nil
+    :nil
+    :nil
+    :
+    ^(Data data, BOOL ok) {
         dispatch_async(queue, ^{
-            !callback ?: callback(data, ok);
-         });
-    };
-    OCSPAsyncReadWriteChannelState *
-    state = _state;
-    OCSPAsyncCondition *
-    writtenIn = _writtenIn;
-    OCSPAsyncCondition *
-    readOut = _readOut;
-    [self lock:_reading
-          then:
-     ^(OCSPAsyncContinue unlock) {
-         [writtenIn waitUntil:
-          ^BOOL{
-              return state->_isClosed || (state->_dataCount > 0);
-          }
-                         then:
-          ^{
-              if (
-                  state->_isClosed
-                  ) {
-                  callback(nil, NO);
-                  unlock();
-                  return;
-              }
-              callback(state->_data, YES);
-              state->_dataCount--;
-              [readOut signal];
-              unlock();
-          }];
-     }];
+            callback(data, ok);
+        });
+    }
+    ];
+}
+
+- (void)close:(void(^)(BOOL ok))callback
+{
+    [self closeOn:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+             with:callback];
 }
 
 - (void)closeOn:(dispatch_queue_t)queue
            with:(void(^)(BOOL ok))callback
 {
-    queue = queue ?: self.defaultCallbackQueue;
-    callback = ^(BOOL ok) {
-        dispatch_async(queue, ^{
-            !callback ?: callback(ok);
-        });
-    };
-    OCSPAsyncReadWriteChannelState *
-    state = _state;
-    OCSPAsyncCondition *
-    writtenIn = _writtenIn;
-    OCSPAsyncCondition *
-    readOut = _readOut;
-    [self lock:_modifying
-          then:
-     ^(OCSPAsyncContinue unlock) {
+    [self.class close
+     :_slot
+     :_communicating
+     :_writtenIn
+     :
+     ^(BOOL ok) {
+         dispatch_async(queue, ^{
+             callback(ok);
+         });
+     }
+     ];
+}
+
+// MARK: - Private
+
++ (void)receive
+:(OCSPAsyncChannelSlot *)slot
+:(OCSPAsyncLock *)communicating
+:(OCSPAsyncCondition *)writtenIn
+:(OCSPAsyncCondition *)readOut
+:(OCSPAsyncSelection *)selection
+:(OCSPAsyncLock *)selecting
+:(OCSPAsyncCondition *)selected
+:(void(^)(id, BOOL))callback
+{
+    __auto_type const
+    cond = [OCSPAsyncCombinedCondition combined:
+            writtenIn,
+            selected,
+            nil];
+    __auto_type const
+    lock = [OCSPAsyncCombinedLock combined:
+            communicating,
+            selecting,
+            nil];
+    [cond withLock:lock
+             check:
+     ^(OCSPAsyncConditionLeave leave, OCSPAsyncConditionWait wait) {
          if (
-             state->_isClosed
+             selection.isDetermined
              ) {
-             callback(NO);
-             unlock();
-             return;
+             leave();
          }
-         state->_isClosed = YES;
-         [writtenIn signal];
-         [readOut signal];
-         callback(YES);
-         unlock();
+         else if (
+                  slot.state == OCSPAsyncChannelSlotStateClosed
+                  ) {
+             callback(nil, NO);
+             leave();
+         }
+         else if (
+                  slot.state == OCSPAsyncChannelSlotStateFilled
+                  ) {
+             callback(slot.data, YES);
+             [slot empty];
+             [selection determine];
+             [selected broadcast];
+             [readOut broadcast];
+             leave();
+         }
+         else {
+             wait();
+         }
      }];
 }
 
-// MARK: - Default
-
-- (void)close:(void(^)(BOOL ok))callback
-{
-   [self closeOn:self.defaultCallbackQueue
-            with:callback];
-}
-
-- (void)receive:(void (^)(id, BOOL))callback
-{
-    [self receiveOn:self.defaultCallbackQueue
-               with:callback];
-}
-
-- (void)send:(id)data
-        with:(void (^)(BOOL))callback
-{
-    [self send:data
-            on:self.defaultCallbackQueue
-          with:callback];
-}
-
-- (dispatch_queue_t)defaultCallbackQueue
-{
-    return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-}
-
-- (void)lock:(dispatch_queue_t)queue
-        then:(void(^)(OCSPAsyncContinue unlock))block
-{
-    dispatch_async(queue, ^{
-        dispatch_suspend(queue);
-        block(^{
-            dispatch_resume(queue);
-        });
-    });
-}
-/*
-+ (void)receive
-{
-    (writtenIn | selectedOut)
-    {
-        if lose {
-            leave()
-        }
-        else if closed {
-            callback(nil, NO);
-            leave()
-        }
-        else if data {
-            data = nil
-            callback(data, YES);
-            readOut broadcast
-            selection.done = YES
-            selectedOut broadcast
-            leave()
-        }
-        else {
-            wait()
-        }
-    }
-}
-
-+ (void)receive
-{
-    writtenIn
-    {
-        if closed {
-            callback(nil, NO);
-            leave()
-        }
-        else if data {
-            callback(data, YES);
-            done()
-        }
-        else {
-            leave()
-        }
-    }
-}
-
 + (void)send
+:(id)data
+:(OCSPAsyncChannelSlot *)slot
+:(OCSPAsyncLock *)writing
+:(OCSPAsyncLock *)communicating
+:(OCSPAsyncCondition *)writtenIn
+:(OCSPAsyncCondition *)readOut
+:(OCSPAsyncSelection *)selection
+:(OCSPAsyncLock *)selecting
+:(OCSPAsyncCondition *)selected
+:(void(^)(BOOL))callback
 {
-    writting lock
-    {
-        wrttienIn | readOut
-        {
-            if closed {
-                callback(NO);
-                leave()
+    [writing lock:^(OCSPAsyncLockUnlock unlockWriting) {
+        __auto_type const
+        cond = [OCSPAsyncCombinedCondition combined:
+                writtenIn,
+                readOut,
+                selected,
+                nil];
+        __auto_type const
+        lock = [OCSPAsyncCombinedLock combined:
+                communicating,
+                selecting,
+                nil];
+        [lock lock:^(OCSPAsyncLockUnlock unlock) {
+            NSAssert
+            (
+             slot.state != OCSPAsyncChannelSlotStateFilled,
+             @"Shouldn't write to a filled channel."
+             );
+            if (
+                slot.state == OCSPAsyncChannelSlotStateEmpty
+                ) {
+                [slot fillWithData:data];
+                [writtenIn broadcast];
             }
-            else if empty {
-                data = data
-                callback(YES);
-                leave()
-                writtenIn broadcast
-            }
-            else {
-                wait()
-            }
-        }
-    }
+            [cond withinLock:lock
+                      unlock:unlock
+                       check:
+             ^(OCSPAsyncConditionLeave leave, OCSPAsyncConditionWait wait) {
+                 if (
+                     selection.isDetermined
+                     ) {
+                     leave();
+                     unlockWriting();
+                 }
+                 else if (
+                          slot.state == OCSPAsyncChannelSlotStateClosed
+                          ) {
+                     callback(NO);
+                     [selection determine];
+                     [selected broadcast];
+                     leave();
+                     unlockWriting();
+                 }
+                 else if (
+                          slot.state == OCSPAsyncChannelSlotStateEmpty
+                          ) {
+                     callback(YES);
+                     leave();
+                     unlockWriting();
+                 }
+                 else {
+                     wait();
+                 }
+             }];
+        }];
+    }];
 }
 
-+ (void)send
++ (void)close:(OCSPAsyncChannelSlot *)slot
+             :(OCSPAsyncLock *)communicating
+             :(OCSPAsyncCondition *)writtenIn
+             :(void(^)(BOOL))callback
 {
-    writting lock
-    {
-        writtenIn | readOut | selected
-        {
-            if lose {
-                leave()
-            }
-            else if closed {
-                callback(NO);
-                leave()
-            }
-            else if empty {
-                data = data
-                callback(YES);
-                writtenIn broadcast
-                selected broadcast
-                leave()
-                unlock()
-            }
-            else {
-                selection.wait()
-                wait()
-            }
+    [communicating lock:^(OCSPAsyncLockUnlock unlock) {
+        if (
+            slot.state == OCSPAsyncChannelSlotStateClosed
+            ) {
+            callback(NO);
+            unlock();
+            return;
         }
-    }
+        [slot close];
+        callback(YES);
+        [writtenIn broadcast];
+        unlock();
+    }];
 }
 
-+ (void)select
+@end
+
+@interface
+OCSPAsyncSelectionBuilder ()
+@property (readonly) OCSPAsyncSelection* selection;
+@property (readonly) OCSPAsyncCondition* selected;
+@property (readonly) OCSPAsyncLock* selecting;
+@end
+@implementation
+OCSPAsyncSelectionBuilder
+@end
+
+const
+void(^OCSPAsyncSelect)(OCSPAsyncSelectBuildup) = ^(OCSPAsyncSelectBuildup buildup) {
+    OCSPAsyncSelectionBuilder *
+    builder = [[OCSPAsyncSelectionBuilder alloc] init];
+    buildup(builder);
+};
+
+@implementation
+OCSPAsyncReadWriteChannel (Select)
+
+- (void)receiveIn:(OCSPAsyncSelectionBuilder *)case_
+             with:(void (^)(id _Nullable, BOOL))callback
 {
-    
+    [self.class receive:_slot
+                       :_communicating
+                       :_writtenIn
+                       :_readOut
+                       :case_.selection
+                       :case_.selecting
+                       :case_.selected
+                       :callback];
 }
-*/
+
 @end

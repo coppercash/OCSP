@@ -6,9 +6,7 @@
 //  Copyright © 2018 coppercash. All rights reserved.
 //
 
-import Foundation
 import XCTest
-import OCSP
 
 class
     ArrayRef<Element>
