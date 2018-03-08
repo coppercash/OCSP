@@ -17,4 +17,15 @@ OCSPAsyncChannel<__covariant Data : id> : NSObject
              with:(void(^)(Data __nullable data, BOOL ok))callback;
 @end
 
+@class
+OCSPAsyncSelectionBuilder;
+@interface
+OCSPAsyncChannel<Data> (Select)
+- (void)receiveIn:(OCSPAsyncSelectionBuilder *)case_
+             with:(void(^)(Data __nullable data, BOOL ok))callback;
+- (void)receiveIn:(OCSPAsyncSelectionBuilder *)case_
+               on:(dispatch_queue_t)queue
+             with:(void(^)(Data __nullable data, BOOL ok))callback;
+@end
+
 NS_ASSUME_NONNULL_END

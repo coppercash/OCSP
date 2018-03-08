@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface
 OCSPAsyncReadWriteChannel<__covariant Data> : OCSPAsyncChannel<Data>
-{
-}
 - (void)send:(Data __nullable)data
         with:(void(^)(BOOL ok))callback;
 - (void)send:(Data __nullable)data
@@ -24,18 +22,26 @@ OCSPAsyncReadWriteChannel<__covariant Data> : OCSPAsyncChannel<Data>
            with:(void(^)(BOOL ok))callback;
 @end
 
+typedef
+void(^OCSPAsyncSelectionDefaultRun)(void);
 @interface OCSPAsyncSelectionBuilder : NSObject
+- (void)default:(OCSPAsyncSelectionDefaultRun)run;
 @end
 
 typedef
-void(^OCSPAsyncSelectBuildup)(OCSPAsyncSelectionBuilder *case_);
+void(^OCSPAsyncSelectionBuildup)(OCSPAsyncSelectionBuilder *case_);
 FOUNDATION_EXPORT const
-void(^OCSPAsyncSelect)(OCSPAsyncSelectBuildup);
+void(^OCSPAsyncSelect)(OCSPAsyncSelectionBuildup);
 
 @interface
 OCSPAsyncReadWriteChannel<Data> (Select)
-- (void)receiveIn:(OCSPAsyncSelectionBuilder *)case_
-             with:(void(^__nullable)(Data __nullable data, BOOL ok))callback;
+- (void)send:(Data)data
+          in:(OCSPAsyncSelectionBuilder *)case_
+          with:(void(^)(BOOL ok))callback;
+- (void)send:(Data)data
+          in:(OCSPAsyncSelectionBuilder *)case_
+          on:(dispatch_queue_t)queue
+        with:(void(^)(BOOL ok))callback;
 @end
 
 NS_ASSUME_NONNULL_END

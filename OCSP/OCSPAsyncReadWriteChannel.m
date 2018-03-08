@@ -10,6 +10,26 @@
 #import "OCSPAsyncLock.h"
 #import "OCSPAsyncCondition.h"
 
+typedef
+NSInteger OCSPAsyncSelectionCaseID;
+__auto_type const
+OCSPAsyncSelectionCaseIDNil = NSNotFound;
+
+@class
+OCSPAsyncSelection;
+@interface
+OCSPAsyncSelectionCase : NSObject
+@property (readonly) OCSPAsyncSelection* selection;
+@end
+@implementation
+OCSPAsyncSelectionCase
+{
+    OCSPAsyncSelection __unsafe_unretained *
+    _selection;
+}
+- (OCSPAsyncSelection *)selection { return _selection; }
+@end
+
 @interface
 OCSPAsyncSelection : NSObject
 @property (readonly) BOOL isDetermined;
@@ -21,13 +41,22 @@ OCSPAsyncSelection
     BOOL
     _isDetermined;
 }
+- (BOOL)isDetermined { return _isDetermined; }
 
 - (void)determine
 {
     _isDetermined = YES;
 }
 
-- (BOOL)isDetermined { return _isDetermined; }
+- (void)wait:(OCSPAsyncSelectionCaseID)caseID
+{
+    
+}
+
+- (BOOL)isWaiting
+{
+    
+}
 
 @end
 
@@ -71,13 +100,18 @@ OCSPAsyncReadWriteChannel
      ];
 }
 
++ (dispatch_queue_t)defaultCallbackQueue
+{
+    return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+}
+
 // MARK: - Public
 
 - (void)send:(Data __nullable)data
         with:(void(^)(BOOL ok))callback
 {
     [self send:data
-            on:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+            on:self.class.defaultCallbackQueue
           with:callback];
 }
 
@@ -93,6 +127,8 @@ OCSPAsyncReadWriteChannel
      :_writtenIn
      :_readOut
      :nil
+     :OCSPAsyncSelectionCaseIDNil
+     :nil
      :nil
      :nil
      :
@@ -106,7 +142,7 @@ OCSPAsyncReadWriteChannel
 
 - (void)receive:(void(^)(Data __nullable data, BOOL ok))callback
 {
-   [self receiveOn:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+   [self receiveOn:self.class.defaultCallbackQueue
               with:callback];
 }
 
@@ -118,6 +154,8 @@ OCSPAsyncReadWriteChannel
     :_communicating
     :_writtenIn
     :_readOut
+    :nil
+    :OCSPAsyncSelectionCaseIDNil
     :nil
     :nil
     :nil
@@ -132,7 +170,7 @@ OCSPAsyncReadWriteChannel
 
 - (void)close:(void(^)(BOOL ok))callback
 {
-    [self closeOn:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+    [self closeOn:self.class.defaultCallbackQueue
              with:callback];
 }
 
@@ -160,8 +198,10 @@ OCSPAsyncReadWriteChannel
 :(OCSPAsyncCondition *)writtenIn
 :(OCSPAsyncCondition *)readOut
 :(OCSPAsyncSelection *)selection
+:(OCSPAsyncSelectionCaseID)caseID
 :(OCSPAsyncLock *)selecting
 :(OCSPAsyncCondition *)selected
+:(OCSPAsyncCondition *)waitStarted
 :(void(^)(id, BOOL))callback
 {
     __auto_type const
@@ -180,17 +220,20 @@ OCSPAsyncReadWriteChannel
          if (
              selection.isDetermined
              ) {
+             NSLog(@"%p reiceiving losed", slot);
              leave();
          }
          else if (
                   slot.state == OCSPAsyncChannelSlotStateClosed
                   ) {
+             NSLog(@"%p reiceiving closed", slot);
              callback(nil, NO);
              leave();
          }
          else if (
                   slot.state == OCSPAsyncChannelSlotStateFilled
                   ) {
+             NSLog(@"%p reiceiving done", slot);
              callback(slot.data, YES);
              [slot empty];
              [selection determine];
@@ -199,21 +242,25 @@ OCSPAsyncReadWriteChannel
              leave();
          }
          else {
+             NSLog(@"%p reiceiving wait", slot);
+             [selection wait:caseID];
+             [waitStarted broadcast];
              wait();
          }
      }];
 }
 
-+ (void)send
-:(id)data
++ (void)send:(id)data
 :(OCSPAsyncChannelSlot *)slot
 :(OCSPAsyncLock *)writing
 :(OCSPAsyncLock *)communicating
 :(OCSPAsyncCondition *)writtenIn
 :(OCSPAsyncCondition *)readOut
 :(OCSPAsyncSelection *)selection
+:(OCSPAsyncSelectionCaseID)caseID
 :(OCSPAsyncLock *)selecting
 :(OCSPAsyncCondition *)selected
+:(OCSPAsyncCondition *)waitStarted
 :(void(^)(BOOL))callback
 {
     [writing lock:^(OCSPAsyncLockUnlock unlockWriting) {
@@ -237,6 +284,7 @@ OCSPAsyncReadWriteChannel
             if (
                 slot.state == OCSPAsyncChannelSlotStateEmpty
                 ) {
+                NSLog(@"%p sending writing", slot);
                 [slot fillWithData:data];
                 [writtenIn broadcast];
             }
@@ -247,26 +295,34 @@ OCSPAsyncReadWriteChannel
                  if (
                      selection.isDetermined
                      ) {
+                     NSLog(@"%p sending losed", slot);
+                     [slot empty];
                      leave();
                      unlockWriting();
                  }
                  else if (
                           slot.state == OCSPAsyncChannelSlotStateClosed
                           ) {
+                     NSLog(@"%p sending closed", slot);
+                     [slot empty];
                      callback(NO);
-                     [selection determine];
-                     [selected broadcast];
                      leave();
                      unlockWriting();
                  }
                  else if (
                           slot.state == OCSPAsyncChannelSlotStateEmpty
                           ) {
+                     NSLog(@"%p sending done", slot);
                      callback(YES);
+                     [selection determine];
+                     [selected broadcast];
                      leave();
                      unlockWriting();
                  }
                  else {
+                     NSLog(@"%p sending wait", slot);
+                     [selection wait:caseID];
+                     [waitStarted broadcast];
                      wait();
                  }
              }];
@@ -287,6 +343,7 @@ OCSPAsyncReadWriteChannel
             unlock();
             return;
         }
+        NSLog(@"%p sending closing", slot);
         [slot close];
         callback(YES);
         [writtenIn broadcast];
@@ -298,35 +355,152 @@ OCSPAsyncReadWriteChannel
 
 @interface
 OCSPAsyncSelectionBuilder ()
-@property (readonly) OCSPAsyncSelection* selection;
-@property (readonly) OCSPAsyncCondition* selected;
-@property (readonly) OCSPAsyncLock* selecting;
+@property (readonly, nonatomic) OCSPAsyncSelection* selection;
+@property (readonly, nonatomic) OCSPAsyncCondition* selected;
+@property (readonly, nonatomic) OCSPAsyncCondition* waitStarted;
+@property (readonly, nonatomic) OCSPAsyncLock* selecting;
+@property (readonly, nonatomic) OCSPAsyncSelectionDefaultRun runDefault;
+@property (nonatomic) NSInteger caseCount;
 @end
 @implementation
 OCSPAsyncSelectionBuilder
+
+- (instancetype)init
+{
+    if (!(
+          self = [super init]
+          )) { return nil; }
+    _selection = [[OCSPAsyncSelection alloc] init];
+    _selected = [[OCSPAsyncCondition alloc] init];
+    _waitStarted = [[OCSPAsyncCondition alloc] init];
+    _selecting = [[OCSPAsyncLock alloc] init];
+    return self;
+}
+
+- (void)default:(OCSPAsyncSelectionDefaultRun)run
+{
+    _runDefault = run;
+}
+
++ (void)default_
+:(OCSPAsyncSelection *)selection
+:(OCSPAsyncLock *)selecting
+:(OCSPAsyncCondition *)selected
+:(OCSPAsyncCondition *)waitStarted
+:(OCSPAsyncSelectionDefaultRun)callback
+{
+    __auto_type const
+    cond = [OCSPAsyncCombinedCondition combined:
+            selected,
+            waitStarted,
+            nil];
+    [cond withLock:selecting
+             check:
+     ^(OCSPAsyncConditionLeave leave, OCSPAsyncConditionWait wait) {
+         if (
+             selection.isDetermined
+             ) {
+             callback();
+             leave();
+         }
+         else if (
+                  selection.isWaiting
+                  ) {
+             [selection determine];
+             [selected broadcast];
+         }
+         else {
+             wait();
+         }
+     }];
+}
+
 @end
 
 const
-void(^OCSPAsyncSelect)(OCSPAsyncSelectBuildup) = ^(OCSPAsyncSelectBuildup buildup) {
-    OCSPAsyncSelectionBuilder *
+void(^OCSPAsyncSelect)(OCSPAsyncSelectionBuildup) = ^(OCSPAsyncSelectionBuildup buildup) {
+    __auto_type const
     builder = [[OCSPAsyncSelectionBuilder alloc] init];
     buildup(builder);
+    if (builder.runDefault) {
+        [OCSPAsyncSelectionBuilder default_
+         :builder.selection
+         :builder.selecting
+         :builder.selected
+         :builder.waitStarted
+         :builder.runDefault
+         ];
+    }
 };
 
 @implementation
 OCSPAsyncReadWriteChannel (Select)
 
 - (void)receiveIn:(OCSPAsyncSelectionBuilder *)case_
+               on:(dispatch_queue_t)queue
+             with:(void(^)(Data data, BOOL ok))callback
+{
+    [self.class receive
+     :_slot
+     :_communicating
+     :_writtenIn
+     :_readOut
+     :case_.selection
+     :(case_.caseCount++)
+     :case_.selecting
+     :case_.selected
+     :case_.waitStarted
+     :
+     ^(Data data, BOOL ok) {
+         dispatch_async(queue, ^{
+             callback(data, ok);
+         });
+     }
+     ];
+}
+
+- (void)receiveIn:(OCSPAsyncSelectionBuilder *)case_
              with:(void (^)(id _Nullable, BOOL))callback
 {
-    [self.class receive:_slot
-                       :_communicating
-                       :_writtenIn
-                       :_readOut
-                       :case_.selection
-                       :case_.selecting
-                       :case_.selected
-                       :callback];
+    [self receiveIn:case_
+                 on:self.class.defaultCallbackQueue
+               with:callback];
+}
+
+- (void)send:(id)data
+          in:(OCSPAsyncSelectionBuilder *)case_
+          on:(dispatch_queue_t)queue
+        with:(void(^)(BOOL ok))callback;
+{
+    [self.class send
+     :data
+     :_slot
+     :_writing
+     :_communicating
+     :_writtenIn
+     :_readOut
+     :case_.selection
+     :OCSPAsyncSelectionCaseIDNil
+     :case_.selecting
+     :case_.selected
+     :case_.waitStarted
+     :
+     ^(BOOL ok) {
+         dispatch_async(queue, ^{
+             callback(ok);
+         });
+     }
+     ];
+}
+
+- (void)send:(id)data
+          in:(OCSPAsyncSelectionBuilder *)case_
+        with:(void(^)(BOOL ok))callback;
+{
+    [self send:data
+            in:case_
+            on:self.class.defaultCallbackQueue
+          with:callback];
 }
 
 @end

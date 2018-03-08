@@ -189,7 +189,9 @@ class
         ) -> Void
     init() {}
     let
-    callbackQ = DispatchQueue(label: "ocsp.aync_chan.test")
+    callbackQ = DispatchQueue(label: "ocsp.aync_chan.test"),
+    sendQ = DispatchQueue(label: "ocsp.aync_chan.test.send"),
+    receiveQ = DispatchQueue(label: "ocsp.aync_chan.test.receive")
     var
     answer = [Act](),
     test :Test = { (_) in }
@@ -200,15 +202,20 @@ class
         last = test,
         idx = answer.count,
         cbQ = callbackQ,
+        q = sendQ,
         act = Act.send(ok, data)
         answer.append(act)
         test = { (chan, emit, expect) in
             last(chan, emit, expect);
             let
             exp = expect(act)
-            chan.send(data, on: cbQ) {
-                emit(idx, Act.send($0, data))
-                exp.fulfill()
+            q.async {
+                q.suspend()
+                chan.send(data, on: cbQ) {
+                    emit(idx, Act.send($0, data))
+                    q.resume()
+                    exp.fulfill()
+                }
             }
         }
         return self
@@ -220,15 +227,20 @@ class
         last = test,
         idx = answer.count,
         cbQ = callbackQ,
+        q = receiveQ,
         act = Act.receive(ok, data)
         answer.append(act)
         test = { (chan, emit, expect) in
             last(chan, emit, expect);
             let
             exp = expect(act)
-            chan.receive(on: cbQ) {
-                emit(idx, Act.receive($1, $0))
-                exp.fulfill()
+            q.async {
+                q.suspend()
+                chan.receive(on: cbQ) {
+                    emit(idx, Act.receive($1, $0))
+                    q.resume()
+                    exp.fulfill()
+                }
             }
         }
         return self
