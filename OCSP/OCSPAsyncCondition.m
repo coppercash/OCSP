@@ -7,6 +7,7 @@
 //
 
 #import "OCSPAsyncCondition.h"
+#import "OCSPDebug.h"
 
 @implementation
 OCSPAsyncCondition
@@ -15,6 +16,10 @@ OCSPAsyncCondition
     _waitings;
     dispatch_queue_t
     _seqQ;
+#ifdef OCSPDEBUG
+    NSString *
+    _label;
+#endif
 }
 
 - (instancetype)init
@@ -27,11 +32,26 @@ OCSPAsyncCondition
     return self;
 }
 
+#ifdef OCSPDEBUG
+- (instancetype)initWithLabel:(NSString *)label
+{
+    if (!(
+          self = [self init]
+          )) { return nil; }
+    _label = label;
+    return self;
+}
+#endif
+
 - (void)broadcast
 {
     [self.class wake:_waitings
                     :_seqQ
-                    :^{}];
+                    :^{}
+#ifdef OCSPDEBUG
+                    :_label
+#endif
+     ];
 }
 
 - (void)withLock:(id<OCSPAsyncLock>)lock
@@ -43,18 +63,21 @@ OCSPAsyncCondition
     waitings = _waitings;
     __auto_type const
     seqQ = _seqQ;
+#ifdef OCSPDEBUG
+    __auto_type const
+    label = _label;
+#endif
     [lock lock:^(OCSPAsyncLockUnlock unlock) {
-        check
-        (
-         unlock,
-         ^{
-             [cls wait:waitings
-                      :lock
-                      :check
-                      :seqQ
-                      :unlock];
-         }
-         );
+        [cls check:check
+                  :waitings
+                  :unlock
+                  :lock
+                  :seqQ
+                  :unlock
+#ifdef OCSPDEBUG
+                  :label
+#endif
+         ];
     }];
 }
 
@@ -62,23 +85,16 @@ OCSPAsyncCondition
             unlock:(OCSPAsyncLockUnlock)unlock
              check:(OCSPAsyncConditionCheck)check
 {
-    __auto_type const
-    cls = self.class;
-    __auto_type const
-    waitings = _waitings;
-    __auto_type const
-    seqQ = _seqQ;
-    check
-    (
-     unlock,
-     ^{
-         [cls wait:waitings
-                  :lock
-                  :check
-                  :seqQ
-                  :unlock];
-     }
-     );
+    [self.class check:check
+                     :_waitings
+                     :unlock
+                     :lock
+                     :_seqQ
+                     :unlock
+#ifdef OCSPDEBUG
+                     :_label
+#endif
+     ];
 }
 
 - (void)_withLock:(id<OCSPAsyncLock>)lock
@@ -89,13 +105,11 @@ OCSPAsyncCondition
                     :lock
                     :check
                     :_seqQ
-                    :callback];
-}
-
-- (void)_withinLock:(id<OCSPAsyncLock>)lock
-    waitForChecking:(OCSPAsyncConditionCheck)check
-{
-    
+                    :callback
+#ifdef OCSPDEBUG
+                    :_label
+#endif
+     ];
 }
 
 + (void)wait
@@ -104,21 +118,24 @@ OCSPAsyncCondition
 :(OCSPAsyncConditionCheck)check
 :(dispatch_queue_t)seqQ
 :(dispatch_block_t)callback
+#ifdef OCSPDEBUG
+:(NSString *)label
+#endif
 {
     dispatch_async(seqQ, ^{
+        OCSPLog(@"\t \t 🚦%@\t ⏸(waiting).", label);
         [waitings addObject:[^{
             [lock lock:^(OCSPAsyncLockUnlock unlock) {
-                check
-                (
-                 ^{ unlock(); },
-                 ^{
-                     [self wait:waitings
-                               :lock
-                               :check
-                               :seqQ
-                               :unlock];
-                 }
-                 );
+                [self check:check
+                           :waitings
+                           :unlock
+                           :lock
+                           :seqQ
+                           :unlock
+#ifdef OCSPDEBUG
+                           :(NSString *)label
+#endif
+                 ];
             }];
         } copy]];
         callback();
@@ -129,16 +146,49 @@ OCSPAsyncCondition
 :(NSMutableArray<dispatch_block_t> *)waitings
 :(dispatch_queue_t)seqQ
 :(dispatch_block_t)callback
+#ifdef OCSPDEBUG
+:(NSString *)label
+#endif
 {
     dispatch_async(seqQ, ^{
         for (dispatch_block_t
              w in waitings
              ) {
+            OCSPLog(@"\t \t 🚦%@\t 🔊(waking).", label);
             w();
         }
         [waitings removeAllObjects];
         callback();
     });
+}
+
++ (void)check
+:(OCSPAsyncConditionCheck)check
+:(NSMutableArray<dispatch_block_t> *)waitings
+:(OCSPAsyncLockUnlock)unlock
+:(id<OCSPAsyncLock>)lock
+:(dispatch_queue_t)seqQ
+:(dispatch_block_t)callback
+#ifdef OCSPDEBUG
+:(NSString *)label
+#endif
+{
+    OCSPLog(@"\t \t 🚦%@\t 📏(checking).", label);
+    check
+    (
+     ^{ unlock(); },
+     ^{
+         [self wait:waitings
+                   :lock
+                   :check
+                   :seqQ
+                   :unlock
+#ifdef OCSPDEBUG
+                   :(NSString *)label
+#endif
+          ];
+     }
+     );
 }
 
 @end

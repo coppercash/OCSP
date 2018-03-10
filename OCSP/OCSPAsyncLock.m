@@ -7,12 +7,17 @@
 //
 
 #import "OCSPAsyncLock.h"
+#import "OCSPDebug.h"
 
 @implementation
 OCSPAsyncLock
 {
     dispatch_queue_t
     _workQ;
+#ifdef OCSPDEBUG
+    NSString *
+    _label;
+#endif
 }
 
 - (instancetype)init
@@ -24,13 +29,30 @@ OCSPAsyncLock
     return self;
 }
 
+#ifdef OCSPDEBUG
+- (instancetype)initWithLabel:(NSString *)label
+{
+    if (!(
+          self = [self init]
+          )) { return nil; }
+    _label = label;
+    return self;
+}
+#endif
+
 - (void)lock:(OCSPAsyncLockRun)lock
 {
     __auto_type const
     workQ = _workQ;
+#ifdef OCSPDEBUG
+    __auto_type const
+    label = _label;
+#endif
     dispatch_async(workQ, ^{
         dispatch_suspend(workQ);
+        OCSPLog(@"\t \t \t 🔐%@\t 🔒(locking).", label);
         lock(^{
+            OCSPLog(@"\t \t \t 🔐%@\t 🔓(unlocking).", label);
             dispatch_resume(workQ);
         });
     });

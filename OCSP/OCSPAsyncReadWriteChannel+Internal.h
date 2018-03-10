@@ -8,6 +8,7 @@
 
 #import "OCSPAsyncReadWriteChannel.h"
 #import "OCSPAsyncChannel.h"
+#import "OCSPDebug.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,6 +27,12 @@ OCSPAsyncChannelSlot : NSObject
 - (void)empty;
 - (void)fillWithData:(id __nullable)data;
 - (void)close;
+
+#ifdef OCSPDEBUG
+- (NSString *)debugIDSel:(id __nullable)selection
+                  caseID:(id __nullable)caseID;
+#endif
+
 @end
 
 NS_ASSUME_NONNULL_END

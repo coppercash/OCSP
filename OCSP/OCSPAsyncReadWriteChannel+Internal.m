@@ -36,4 +36,23 @@ OCSPAsyncChannelSlot {
     _state = OCSPAsyncChannelSlotStateClosed;
 }
 
+#ifdef OCSPDEBUG
+
+- (NSString *)debugIDSel:(id)selection
+                  caseID:(id)caseID
+{
+    return [NSString stringWithFormat:
+            @"📭(%p)%@",
+            self,
+            ((selection == nil) ? @"" :
+            [NSString stringWithFormat:
+             @"\\👄(%@)\\⚔️(%p)",
+             caseID,
+             selection
+             ])
+            ];
+}
+
+#endif
+
 @end
