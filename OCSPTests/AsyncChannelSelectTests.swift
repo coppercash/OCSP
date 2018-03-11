@@ -74,7 +74,7 @@ class AsyncChannelSelectTests: XCTestCase {
         
         Select {
             c0.send(420, in: $0, with: { _ in
-                
+                v0 = -1
             })
             c1.send(421, in: $0, with: {
                 if !$0 { return }
@@ -146,6 +146,34 @@ class AsyncChannelSelectTests: XCTestCase {
         XCTAssertEqual(v1, 4211)
     }
     
+    func
+        test_default_0()
+    {
+        let
+        c0 = Chan<NSNumber>()
+        let
+        ex0s = expectation(description: "0s"),
+        ex0r = expectation(description: "0r")
+        var
+        v0 = 0
+        c0.receive {
+            if !$1 { return }
+            v0 = Int($0!)
+            ex0r.fulfill()
+        }
+        Select {
+            c0.send(42, in: $0, with: {
+                if !$0 { return }
+                ex0s.fulfill()
+            })
+            $0.default {
+                v0 = -1
+            }
+        }
+        wait(for: [ex0r, ex0s], timeout: 1.0)
+        XCTAssertEqual(v0, 42)
+    }
     // close & write & read & default
     // default
+    // same chan multiple op
 }

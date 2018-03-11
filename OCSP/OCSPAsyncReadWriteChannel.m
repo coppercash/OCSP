@@ -10,7 +10,7 @@
 #import "OCSPAsyncLock+Internal.h"
 #import "OCSPAsyncCondition+Internal.h"
 #import "OCSPDebug.h"
-
+/*
 typedef
 NSInteger OCSPAsyncSelectionCaseID;
 __auto_type const
@@ -35,6 +35,7 @@ OCSPAsyncSelectionCase
 OCSPAsyncSelection : NSObject
 @property (readonly) BOOL isDetermined;
 - (void)determine;
+- (void)halt:(OCSPAsyncSelectionCaseID)caseID;
 @end
 @implementation
 OCSPAsyncSelection
@@ -51,12 +52,12 @@ OCSPAsyncSelection
     _isDetermined = YES;
 }
 
-- (void)wait:(OCSPAsyncSelectionCaseID)caseID
+- (void)halt:(OCSPAsyncSelectionCaseID)caseID
 {
     _waitingCases |= (1 << caseID);
 }
 
-- (BOOL)areAllCasesWaiting:(NSUInteger)caseCount
+- (BOOL)areAllCasesHalting:(NSUInteger)caseCount
 {
     __auto_type const
     mask = (uint64)~(-1 << caseCount);  // 0…01…1
@@ -64,22 +65,30 @@ OCSPAsyncSelection
 }
 
 @end
-
+*/
 typedef
 id Data;
+typedef
+void(^OCSPAsyncChannelReceive)(Data data, BOOL ok);
+typedef
+void(^OCSPAsyncChannelSend)(BOOL ok);
+typedef
+OCSPAsyncCondition * OCSPAsyncConditionRef;
+
 @implementation
 OCSPAsyncReadWriteChannel
 {
     OCSPAsyncChannelSlot *
     _slot;
     OCSPAsyncLock *
-    _writing;
-    OCSPAsyncLock *
     _communicating;
-    OCSPAsyncCondition *
-    _writtenIn;
-    OCSPAsyncCondition *
-    _readOut;
+    OCSPAsyncConditionRef
+    _empty,
+    _writing,
+    _read,
+    _reading,
+    _written,
+    _closed;
 }
 
 - (instancetype)init
@@ -89,20 +98,29 @@ OCSPAsyncReadWriteChannel
           )) {  return nil; }
     _slot = [[OCSPAsyncChannelSlot alloc] init];
 #ifdef OCSPDEBUG
-    _writing = [[OCSPAsyncLock alloc] initWithLabel:
-                [NSString stringWithFormat:@"(📝 WRT)\\📭(%p)", _slot]
-                ];
     _communicating = [[OCSPAsyncLock alloc] initWithLabel:
                       [NSString stringWithFormat:@"(✉️ CMN)\\📭(%p)", _slot]
                       ];
-    _writtenIn = [[OCSPAsyncCondition alloc] initWithLabel:
-                  [NSString stringWithFormat:@"(📝 WRTIN)\\📭(%p)", _slot]
-                  ];
-    _readOut = [[OCSPAsyncCondition alloc] initWithLabel:
-                [NSString stringWithFormat:@"(📖 RDOUT)\\📭(%p)", _slot]
+    _empty = [[OCSPAsyncCondition alloc] initWithLabel:
+              [NSString stringWithFormat:@"(📭 EMPTY)\\📭(%p)", _slot]
+              ];
+    _writing = [[OCSPAsyncCondition alloc] initWithLabel:
+                [NSString stringWithFormat:@"(📝 WRTNG)\\📭(%p)", _slot]
                 ];
+    _read = [[OCSPAsyncCondition alloc] initWithLabel:
+             [NSString stringWithFormat:@"(📖 READN)\\📭(%p)", _slot]
+             ];
+    _reading = [[OCSPAsyncCondition alloc] initWithLabel:
+                [NSString stringWithFormat:@"(📖 RDING)\\📭(%p)", _slot]
+                ];
+    _written = [[OCSPAsyncCondition alloc] initWithLabel:
+                [NSString stringWithFormat:@"(📝 WRTTN)\\📭(%p)", _slot]
+                ];
+    _closed = [[OCSPAsyncCondition alloc] initWithLabel:
+               [NSString stringWithFormat:@"(📪 CLSED)\\📭(%p)", _slot]
+               ];
 #else
-    _writing = [[OCSPAsyncLock alloc] init];
+    _closed = [[OCSPAsyncLock alloc] init];
     _communicating = [[OCSPAsyncLock alloc] init];
     _writtenIn = [[OCSPAsyncCondition alloc] init];
     _readOut = [[OCSPAsyncCondition alloc] init];
@@ -115,7 +133,7 @@ OCSPAsyncReadWriteChannel
     [self.class close
      :_slot
      :_communicating
-     :_writtenIn
+     :_closed
      :^(BOOL _) {}
      ];
 }
@@ -140,19 +158,17 @@ OCSPAsyncReadWriteChannel
         with:(void(^)(BOOL ok))callback
 {
     [self.class send
-     :data
      :_slot
-     :_writing
      :_communicating
-     :_writtenIn
-     :_readOut
-     :nil
-     :OCSPAsyncSelectionCaseIDNil
-     :nil
-     :nil
-     :nil
-     :
-     ^(BOOL ok) {
+     :_empty
+     :_writing
+     :_read
+     :_reading
+     :_written
+     :_closed
+     :data
+     :NO
+     :^(BOOL ok) {
          dispatch_async(queue, ^{
              callback(ok);
          });
@@ -172,15 +188,13 @@ OCSPAsyncReadWriteChannel
     [self.class receive
      :_slot
      :_communicating
-     :_writtenIn
-     :_readOut
-     :nil
-     :OCSPAsyncSelectionCaseIDNil
-     :nil
-     :nil
-     :nil
-     :
-     ^(Data data, BOOL ok) {
+     :_empty
+     :_reading
+     :_written
+     :_writing
+     :_read
+     :_closed
+     :^(Data data, BOOL ok) {
          dispatch_async(queue, ^{
              callback(data, ok);
          });
@@ -200,7 +214,7 @@ OCSPAsyncReadWriteChannel
     [self.class close
      :_slot
      :_communicating
-     :_writtenIn
+     :_closed
      :
      ^(BOOL ok) {
          dispatch_async(queue, ^{
@@ -213,176 +227,153 @@ OCSPAsyncReadWriteChannel
 // MARK: - Private
 
 + (void)receive
+
 :(OCSPAsyncChannelSlot *)slot
 :(OCSPAsyncLock *)communicating
-:(OCSPAsyncCondition *)writtenIn
-:(OCSPAsyncCondition *)readOut
-:(OCSPAsyncSelection *)selection
-:(OCSPAsyncSelectionCaseID)caseID
-:(OCSPAsyncLock *)selecting
-:(OCSPAsyncCondition *)selected
-:(OCSPAsyncCondition *)waitStarted
-:(void(^)(id, BOOL))callback
+:(OCSPAsyncCondition *)empty
+:(OCSPAsyncCondition *)reading
+:(OCSPAsyncCondition *)written
+:(OCSPAsyncCondition *)writing
+:(OCSPAsyncCondition *)read
+:(OCSPAsyncCondition *)closed
+
+:(OCSPAsyncChannelReceive)callback
 {
     __auto_type const
     cond = [OCSPAsyncCombinedCondition combined:
-            writtenIn,
-            selected,
+            empty,
+            written,
+            writing,
+            closed,
             nil];
-    __auto_type const
-    lock = [OCSPAsyncCombinedLock combined:
-            communicating,
-            selecting,
-            nil];
-    [cond withLock:lock
+    [cond withLock:communicating
              check:
      ^(OCSPAsyncConditionLeave leave, OCSPAsyncConditionWait wait) {
-         if (
-             selection.isDetermined
-             ) {
-             OCSPLog(@"\t %@ ❌(selected out)\\📩.",
-                     [slot debugIDSel:selection
-                               caseID:@(caseID)]
-                     );
-             leave();
-         }
-         else if (
-                  slot.state == OCSPAsyncChannelSlotStateClosed
-                  ) {
-             OCSPLog(@"\t %@ 📪(closed)\\📩.",
-                     [slot debugIDSel:selection
-                               caseID:@(caseID)]
-                     );
-             leave();
-             callback(nil, NO);
-         }
-         else if (
-                  slot.state == OCSPAsyncChannelSlotStateFilled
-                  ) {
-             OCSPLog(@"\t %@ ✅(done)\\📩.",
-                     [slot debugIDSel:selection
-                               caseID:@(caseID)]
-                     );
-             Data const
-             data = slot.data;
-             [slot empty];
-             [selection determine];
-             [selected broadcast];
-             [readOut broadcast];
-             leave();
-             callback(data, YES);
-         }
-         else {
-             OCSPLog(@"\t %@ ⏸(wait)\\📩.",
-                     [slot debugIDSel:selection
-                               caseID:@(caseID)]
-                     );
-             [selection wait:caseID];
-             [waitStarted broadcast];
-             wait();
+         switch (
+                 slot.state
+                 ) {
+             case OCSPAsyncChannelSlotStateClosed
+                 : {
+                     leave();
+                     callback(nil, NO);
+                 } break;
+             case OCSPAsyncChannelSlotStateEmpty
+                 : {
+                     [slot read:NULL];
+                     [reading broadcast];
+                     wait();
+                 } break;
+             case OCSPAsyncChannelSlotStateWritten
+                 : {
+                     Data
+                     data = nil;
+                     [slot read:&data];
+                     [empty broadcast];
+                     leave();
+                     callback(data, YES);
+                 } break;
+             case OCSPAsyncChannelSlotStateWriting
+                 : {
+                     Data
+                     data = nil;
+                     [slot read:&data];
+                     [read broadcast];
+                     leave();
+                     callback(data, YES);
+                 } break;
+             default:
+                 wait();
+                 break;
          }
      }];
 }
 
-+ (void)send:(id)data
-            :(OCSPAsyncChannelSlot *)slot
-            :(OCSPAsyncLock *)writing
-            :(OCSPAsyncLock *)communicating
-            :(OCSPAsyncCondition *)writtenIn
-            :(OCSPAsyncCondition *)readOut
-            :(OCSPAsyncSelection *)selection
-            :(OCSPAsyncSelectionCaseID)caseID
-            :(OCSPAsyncLock *)selecting
-            :(OCSPAsyncCondition *)selected
-            :(OCSPAsyncCondition *)waitStarted
-            :(void(^)(BOOL))callback
++ (void)send
+
+:(OCSPAsyncChannelSlot *)slot
+:(OCSPAsyncLock *)communicating
+:(OCSPAsyncCondition *)empty
+:(OCSPAsyncCondition *)writing
+:(OCSPAsyncCondition *)read
+:(OCSPAsyncCondition *)reading
+:(OCSPAsyncCondition *)written
+:(OCSPAsyncCondition *)closed
+
+:(Data)data
+:(BOOL)isDataWritten
+:(OCSPAsyncChannelSend)callback
 {
-    [writing lock:^(OCSPAsyncLockUnlock unlockWriting) {
-        __auto_type const
-        cond = [OCSPAsyncCombinedCondition combined:
-                writtenIn,
-                readOut,
-                selected,
-                nil];
-        __auto_type const
-        lock = [OCSPAsyncCombinedLock combined:
-                communicating,
-                selecting,
-                nil];
-        [lock lock:^(OCSPAsyncLockUnlock unlock) {
-            NSAssert
-            (
-             slot.state != OCSPAsyncChannelSlotStateFilled,
-             @"Shouldn't write to a filled channel."
-             );
-            if (
-                slot.state == OCSPAsyncChannelSlotStateEmpty
-                ) {
-                OCSPLog(@"\t %@ 📝(writing)\\📤.",
-                        [slot debugIDSel:selection
-                                  caseID:@(caseID)]
-                        );
-                [slot fillWithData:data];
-                [writtenIn broadcast];
-            }
-            [cond withinLock:lock
-                      unlock:unlock
-                       check:
-             ^(OCSPAsyncConditionLeave leave, OCSPAsyncConditionWait wait) {
-                 if (
-                     selection.isDetermined
-                     ) {
-                     OCSPLog(@"\t %@ ❌(selected out)\\📤.",
-                             [slot debugIDSel:selection
-                                       caseID:@(caseID)]
-                             );
-                     [slot empty];
+    __auto_type const
+    cond = [OCSPAsyncCombinedCondition combined:
+            empty,
+            read,
+            reading,
+            closed,
+            nil];
+    [cond withLock:communicating
+             check:
+     ^(OCSPAsyncConditionLeave leave, OCSPAsyncConditionWait wait) {
+         switch (
+                 slot.state
+                 ) {
+             case OCSPAsyncChannelSlotStateClosed
+                 : {
                      leave();
-                     unlockWriting();
-                 }
-                 else if (
-                          slot.state == OCSPAsyncChannelSlotStateClosed
-                          ) {
-                     OCSPLog(@"\t %@ 📪(closed)\\📤.",
-                             [slot debugIDSel:selection
-                                       caseID:@(caseID)]
-                             );
-                     [slot empty];
-                     leave();
-                     unlockWriting();
                      callback(NO);
-                 }
-                 else if (
-                          slot.state == OCSPAsyncChannelSlotStateEmpty
-                          ) {
-                     OCSPLog(@"\t %@ ✅(done)\\📤.",
-                             [slot debugIDSel:selection
-                                       caseID:@(caseID)]
-                             );
-                     [selection determine];
-                     [selected broadcast];
+                 } break;
+             case OCSPAsyncChannelSlotStateEmpty
+                 : {
+                     [slot write:data];
+                     [writing broadcast];
+                     [self send
+                      :slot
+                      :communicating
+                      :empty
+                      :writing
+                      :read
+                      :reading
+                      :written
+                      :closed
+                      :data
+                      :YES
+                      :callback
+                      ];
                      leave();
-                     unlockWriting();
+                 } break;
+             case OCSPAsyncChannelSlotStateRead
+                 : {
+                     if (
+                         isDataWritten
+                         ) {
+                         [slot write:nil];
+                         [empty broadcast];
+                         leave();
+                         callback(YES);
+                     }
+                     else {
+                         wait();
+                     }
+                 } break;
+             case OCSPAsyncChannelSlotStateReading
+                 : {
+                     NSAssert(isDataWritten == NO, @"Multiple sendings entered the critical section.");
+                     [slot write:data];
+                     [written broadcast];
+                     leave();
                      callback(YES);
-                 }
-                 else {
-                     OCSPLog(@"\t %@ ⏸(wait)\\📤.",
-                             [slot debugIDSel:selection
-                                       caseID:@(caseID)]
-                             );
-                     [selection wait:caseID];
-                     [waitStarted broadcast];
-                     wait();
-                 }
-             }];
-        }];
-    }];
+                 } break;
+             default:
+                 wait();
+                 break;
+         }
+     }];
 }
 
-+ (void)close:(OCSPAsyncChannelSlot *)slot
-             :(OCSPAsyncLock *)communicating
-             :(OCSPAsyncCondition *)writtenIn
-             :(void(^)(BOOL))callback
++ (void)close
+:(OCSPAsyncChannelSlot *)slot
+:(OCSPAsyncLock *)communicating
+:(OCSPAsyncCondition *)closed
+:(void(^)(BOOL))callback
 {
     [communicating lock:^(OCSPAsyncLockUnlock unlock) {
         if (
@@ -392,12 +383,12 @@ OCSPAsyncReadWriteChannel
             callback(NO);
             return;
         }
-        OCSPLog(@"\t %@ 📪(closed)",
+        OCSPLog(@"\t %@ 📪(closing)",
                 [slot debugIDSel:nil
                           caseID:nil]
                 );
         [slot close];
-        [writtenIn broadcast];
+        [closed broadcast];
         callback(YES);
         unlock();
     }];
@@ -405,14 +396,22 @@ OCSPAsyncReadWriteChannel
 
 @end
 
+typedef
+OCSPAsyncConditionLeave OCSPAsyncSelectDetermine;
+typedef
+OCSPAsyncConditionWait OCSPAsyncSelectHesitate;
+typedef
+void(^OCSPAsyncSelectTry)
+(
+ OCSPAsyncSelectDetermine determine,
+ OCSPAsyncSelectHesitate hesitate
+ );
+
 @interface
 OCSPAsyncSelectionBuilder ()
-@property (readonly, nonatomic) OCSPAsyncSelection* selection;
-@property (readonly, nonatomic) OCSPAsyncCondition* selected;
-@property (readonly, nonatomic) OCSPAsyncCondition* waitStarted;
-@property (readonly, nonatomic) OCSPAsyncLock* selecting;
-@property (readonly, nonatomic) OCSPAsyncSelectionDefaultRun runDefault;
-@property (nonatomic) NSInteger caseCount;
+@property (readonly, nonatomic) NSMutableArray<OCSPAsyncLock *> *locks;
+@property (readonly, nonatomic) NSMutableArray<OCSPAsyncCondition *> *conditions;
+@property (readonly, nonatomic) NSMutableArray<OCSPAsyncSelectTry> *tries;
 @end
 @implementation
 OCSPAsyncSelectionBuilder
@@ -422,42 +421,56 @@ OCSPAsyncSelectionBuilder
     if (!(
           self = [super init]
           )) { return nil; }
-    _selection = [[OCSPAsyncSelection alloc] init];
-#ifdef OCSPDEBUG
-    _selecting = [[OCSPAsyncLock alloc] initWithLabel:
-                  [NSString stringWithFormat:@"(⚔️ SLT)\\⚔️(%p)", _selection]
-                  ];
-    _selected = [[OCSPAsyncCondition alloc] initWithLabel:
-                 [NSString stringWithFormat:@"(⚔️ SLTED)\\⚔️(%p)", _selection]
-                 ];
-    _waitStarted = [[OCSPAsyncCondition alloc] initWithLabel:
-                    [NSString stringWithFormat:@"(⏸ WTSTR)\\⚔️(%p)", _selection]
-                    ];
-#else
-    _selected = [[OCSPAsyncCondition alloc] init];
-    _waitStarted = [[OCSPAsyncCondition alloc] init];
-    _selecting = [[OCSPAsyncLock alloc] init];
-#endif
+    _locks = [[NSMutableArray alloc] init];
+    _conditions = [[NSMutableArray alloc] init];
+    _tries = [[NSMutableArray alloc] init];
+//    _selection = [[OCSPAsyncSelection alloc] init];
+//#ifdef OCSPDEBUG
+//    _selecting = [[OCSPAsyncLock alloc] initWithLabel:
+//                  [NSString stringWithFormat:@"(⚔️ SLT)\\⚔️(%p)", _selection]
+//                  ];
+//    _selected = [[OCSPAsyncCondition alloc] initWithLabel:
+//                 [NSString stringWithFormat:@"(⚔️ SLTED)\\⚔️(%p)", _selection]
+//                 ];
+//    _halted = [[OCSPAsyncCondition alloc] initWithLabel:
+//                    [NSString stringWithFormat:@"(⏸ HLTED)\\⚔️(%p)", _selection]
+//                    ];
+//#else
+//    _selected = [[OCSPAsyncCondition alloc] init];
+//    _halted = [[OCSPAsyncCondition alloc] init];
+//    _selecting = [[OCSPAsyncLock alloc] init];
+//#endif
     return self;
 }
 
 - (void)default:(OCSPAsyncSelectionDefaultRun)run
 {
-    _runDefault = run;
+    
+    [_tries addObject:
+     [
+      ^(
+        OCSPAsyncSelectDetermine determine,
+        OCSPAsyncSelectHesitate hesitate
+        ){
+          determine();
+          !run ?: run();
+      }
+      copy]
+     ];
 }
-
+/*
 + (void)default_
 :(OCSPAsyncSelection *)selection
 :(NSUInteger)caseCount
 :(OCSPAsyncLock *)selecting
 :(OCSPAsyncCondition *)selected
-:(OCSPAsyncCondition *)waitStarted
+:(OCSPAsyncCondition *)halted
 :(OCSPAsyncSelectionDefaultRun)callback
 {
     __auto_type const
     cond = [OCSPAsyncCombinedCondition combined:
             selected,
-            waitStarted,
+            halted,
             nil];
     [cond withLock:selecting
              check:
@@ -469,7 +482,7 @@ OCSPAsyncSelectionBuilder
              leave();
          }
          else if (
-                  [selection areAllCasesWaiting:caseCount]
+                  [selection areAllCasesHalting:caseCount]
                   ) {
              OCSPLog(@"\t ⚔️(%p)\t ✅(done)\\🍚.", selection);
              [selection determine];
@@ -483,6 +496,33 @@ OCSPAsyncSelectionBuilder
          }
      }];
 }
+*/
+
++ (void)try
+:(NSArray<OCSPAsyncConditionCheck> *)tries
+:(NSInteger)index
+:(OCSPAsyncSelectDetermine)determine
+:(OCSPAsyncSelectHesitate)hesitate
+{
+    if (!(
+          index < tries.count
+          )) {
+        hesitate();
+    }
+    __auto_type const
+    try = tries[index];
+    try(
+        determine,
+        ^{
+            [self try
+             :tries
+             :index
+             :determine
+             :hesitate
+             ];
+        }
+        );
+}
 
 @end
 
@@ -491,38 +531,93 @@ void(^OCSPAsyncSelect)(OCSPAsyncSelectionBuildup) = ^(OCSPAsyncSelectionBuildup 
     __auto_type const
     builder = [[OCSPAsyncSelectionBuilder alloc] init];
     buildup(builder);
-    if (builder.runDefault) {
-        NSCAssert(builder.caseCount < 64, @"More than 63 cases in one select clause is not supported.");
-        [OCSPAsyncSelectionBuilder default_
-         :builder.selection
-         :builder.caseCount
-         :builder.selecting
-         :builder.selected
-         :builder.waitStarted
-         :builder.runDefault
+    __auto_type const
+    lock = [[OCSPAsyncCombinedLock alloc] initWithLocks:builder.locks];
+    __auto_type const
+    condition = [[OCSPAsyncCombinedCondition alloc] initWithConditions:builder.conditions];
+    __auto_type const
+    tries = builder.tries;
+    [condition withLock:lock
+                  check:
+     ^(OCSPAsyncConditionLeave leave, OCSPAsyncConditionWait wait) {
+        [OCSPAsyncSelectionBuilder try
+         :tries
+         :0
+         :leave
+         :wait
          ];
-    }
+     }];
 };
 
 @implementation
 OCSPAsyncReadWriteChannel (Select)
 
+//         if (
+//             selection.isDetermined
+//             ) {
+//             OCSPLog(@"\t %@ ❌(selected out)\\📩.",
+//                     [slot debugIDSel:selection
+//                               caseID:@(caseID)]
+//                     );
+//             leave();
+//         }
++ (void)receive
+:(OCSPAsyncSelectionBuilder *)builder
+:(OCSPAsyncChannelSlot *)slot
+:(OCSPAsyncLock *)communicating
+:(OCSPAsyncCondition *)writing
+:(OCSPAsyncCondition *)read
+:(OCSPAsyncCondition *)closed
+:(OCSPAsyncChannelReceive)callback
+{
+    [builder.locks addObject:communicating];
+    [builder.conditions addObject:writing];
+    [builder.conditions addObject:closed];
+    [builder.tries addObject:
+     [
+      ^(
+        OCSPAsyncSelectDetermine determine,
+        OCSPAsyncSelectHesitate hesitate
+        ){
+          switch (slot.state) {
+              case
+                  OCSPAsyncChannelSlotStateClosed
+                  : {
+                      determine();
+                      callback(nil, NO);
+                  } break;
+              case
+                  OCSPAsyncChannelSlotStateWriting
+                  : {
+                      Data
+                      data = nil;
+                      [slot read:&data];
+                      [read broadcast];
+                      determine();
+                      callback(data, YES);
+                  } break;
+              default:
+                  hesitate();
+                  break;
+          }
+      }
+      copy]
+     ];
+}
+
 - (void)receiveIn:(OCSPAsyncSelectionBuilder *)case_
                on:(dispatch_queue_t)queue
-             with:(void(^)(Data data, BOOL ok))callback
+             with:(void(^)(Data, BOOL))callback
 {
+    
     [self.class receive
+     :case_
      :_slot
      :_communicating
-     :_writtenIn
-     :_readOut
-     :case_.selection
-     :(case_.caseCount++)
-     :case_.selecting
-     :case_.selected
-     :case_.waitStarted
-     :
-     ^(Data data, BOOL ok) {
+     :_writing
+     :_read
+     :_closed
+     :^(Data data, BOOL ok) {
          dispatch_async(queue, ^{
              callback(data, ok);
          });
@@ -531,11 +626,54 @@ OCSPAsyncReadWriteChannel (Select)
 }
 
 - (void)receiveIn:(OCSPAsyncSelectionBuilder *)case_
-             with:(void (^)(id _Nullable, BOOL))callback
+             with:(void (^)(Data, BOOL))callback
 {
     [self receiveIn:case_
                  on:self.class.defaultCallbackQueue
                with:callback];
+}
+
++ (void)send
+:(OCSPAsyncSelectionBuilder *)builder
+:(OCSPAsyncChannelSlot *)slot
+:(OCSPAsyncLock *)communicating
+:(OCSPAsyncCondition *)reading
+:(OCSPAsyncCondition *)written
+:(OCSPAsyncCondition *)closed
+:(Data)data
+:(OCSPAsyncChannelSend)callback
+{
+    [builder.locks addObject:communicating];
+    [builder.conditions addObject:reading];
+    [builder.conditions addObject:closed];
+    [builder.tries addObject:
+     [
+      ^(
+        OCSPAsyncSelectDetermine determine,
+        OCSPAsyncSelectHesitate hesitate
+        ){
+          switch (slot.state) {
+              case
+                  OCSPAsyncChannelSlotStateClosed
+                  : {
+                      determine();
+                      callback(NO);
+                  } break;
+              case
+                  OCSPAsyncChannelSlotStateReading
+                  : {
+                      [slot write:data];
+                      [written broadcast];
+                      determine();
+                      callback(YES);
+                  } break;
+              default:
+                  hesitate();
+                  break;
+          }
+      }
+      copy]
+     ];
 }
 
 - (void)send:(id)data
@@ -544,19 +682,14 @@ OCSPAsyncReadWriteChannel (Select)
         with:(void(^)(BOOL ok))callback;
 {
     [self.class send
-     :data
+     :case_
      :_slot
-     :_writing
      :_communicating
-     :_writtenIn
-     :_readOut
-     :case_.selection
-     :(case_.caseCount++)
-     :case_.selecting
-     :case_.selected
-     :case_.waitStarted
-     :
-     ^(BOOL ok) {
+     :_reading
+     :_written
+     :_closed
+     :data
+     :^(BOOL ok) {
          dispatch_async(queue, ^{
              callback(ok);
          });

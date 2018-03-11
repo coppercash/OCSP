@@ -15,20 +15,23 @@ NS_ASSUME_NONNULL_BEGIN
 typedef
 NS_ENUM(NSInteger, OCSPAsyncChannelSlotState)
 {
-    OCSPAsyncChannelSlotStateEmpty = 0,
-    OCSPAsyncChannelSlotStateFilled,
+    OCSPAsyncChannelSlotStateEmpty = 1,
+    OCSPAsyncChannelSlotStateWriting,
+    OCSPAsyncChannelSlotStateRead,
+    OCSPAsyncChannelSlotStateReading,
+    OCSPAsyncChannelSlotStateWritten,
     OCSPAsyncChannelSlotStateClosed,
 };
 
 @interface
 OCSPAsyncChannelSlot : NSObject
-@property (readonly, nullable) id data;
 @property (readonly) OCSPAsyncChannelSlotState state;
-- (void)empty;
-- (void)fillWithData:(id __nullable)data;
+- (void)write:(id)data;
+- (void)read:(id __nullable __autoreleasing * __nullable)outData;
 - (void)close;
 
 #ifdef OCSPDEBUG
+@property (readonly) NSString * debugID;
 - (NSString *)debugIDSel:(id __nullable)selection
                   caseID:(id __nullable)caseID;
 #endif

@@ -18,16 +18,104 @@ OCSPAsyncChannelSlot {
 - (id)data { return _data; }
 - (OCSPAsyncChannelSlotState)state { return _state; }
 
+- (instancetype)init
+{
+    if (!(
+          self = [super init]
+          )) { return nil; }
+    _state = OCSPAsyncChannelSlotStateEmpty;
+    return self;
+}
+/*
 - (void)empty
 {
-    _data = nil;
-    _state = OCSPAsyncChannelSlotStateEmpty;
+    switch (
+            _state
+            ) {
+        case
+            OCSPAsyncChannelSlotStateWritten
+            :
+        case
+            OCSPAsyncChannelSlotStateRead
+            : {
+                _data = nil;
+                _state = OCSPAsyncChannelSlotStateEmpty;
+            } break;
+        default:
+            NSAssert(NO, @"Invalid state transmission.");
+            break;
+    }
+}
+ */
+
+- (void)write:(id)data
+{
+    switch (
+            _state
+            ) {
+        case
+            OCSPAsyncChannelSlotStateEmpty
+            : {
+                _data = data;
+                _state = OCSPAsyncChannelSlotStateWriting;
+            } break;
+        case
+            OCSPAsyncChannelSlotStateReading
+            : {
+                _data = data;
+                _state = OCSPAsyncChannelSlotStateWritten;
+            } break;
+        case
+            OCSPAsyncChannelSlotStateRead
+            : {
+                _data = nil;
+                _state = OCSPAsyncChannelSlotStateEmpty;
+            } break;
+        default:
+            NSAssert(NO, @"Invalid state transmission.");
+            break;
+    }
 }
 
-- (void)fillWithData:(id)data
+- (void)read:(id __autoreleasing *)outData
 {
-    _data = data;
-    _state = OCSPAsyncChannelSlotStateFilled;
+    switch (
+            _state
+            ) {
+        case
+            OCSPAsyncChannelSlotStateEmpty
+            : {
+                if (
+                    outData != nil
+                    ) {
+                    *outData = _data;
+                }
+                _state = OCSPAsyncChannelSlotStateReading;
+            } break;
+        case
+            OCSPAsyncChannelSlotStateWriting
+            : {
+                if (
+                    outData != nil
+                    ) {
+                    *outData = _data;
+                }
+                _state = OCSPAsyncChannelSlotStateRead;
+            } break;
+        case
+            OCSPAsyncChannelSlotStateWritten
+            : {
+                if (
+                    outData != nil
+                    ) {
+                    *outData = _data;
+                }
+                _state = OCSPAsyncChannelSlotStateEmpty;
+            } break;
+        default:
+            NSAssert(NO, @"Invalid state transmission.");
+            break;
+    }
 }
 
 - (void)close
@@ -37,6 +125,12 @@ OCSPAsyncChannelSlot {
 }
 
 #ifdef OCSPDEBUG
+
+- (NSString *)debugID
+{
+    return [self debugIDSel:nil
+                     caseID:nil];
+}
 
 - (NSString *)debugIDSel:(id)selection
                   caseID:(id)caseID
