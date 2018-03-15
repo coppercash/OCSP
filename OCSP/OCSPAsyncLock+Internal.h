@@ -9,8 +9,14 @@
 #import "OCSPAsyncLock.h"
 #import "OCSPDebug.h"
 
-#ifdef OCSPDEBUG
+NS_ASSUME_NONNULL_BEGIN
+
+#ifdef OCSPDEBUG_LOCK
+
 @interface OCSPAsyncLock (Internal)
 - (instancetype)initWithLabel:(NSString *)label;
 @end
+
 #endif
+
+NS_ASSUME_NONNULL_END

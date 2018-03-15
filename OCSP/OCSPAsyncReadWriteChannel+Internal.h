@@ -26,7 +26,7 @@ NS_ENUM(NSInteger, OCSPAsyncChannelSlotState)
 @interface
 OCSPAsyncChannelSlot : NSObject
 @property (readonly) OCSPAsyncChannelSlotState state;
-- (void)write:(id)data;
+- (void)write:(id __nullable)data;
 - (void)read:(id __nullable __autoreleasing * __nullable)outData;
 - (void)close;
 

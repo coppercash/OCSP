@@ -97,10 +97,16 @@ OCSPAsyncReadWriteChannel
           self = [super init]
           )) {  return nil; }
     _slot = [[OCSPAsyncChannelSlot alloc] init];
-#ifdef OCSPDEBUG
+    
+#ifdef OCSPDEBUG_LOCK
     _communicating = [[OCSPAsyncLock alloc] initWithLabel:
                       [NSString stringWithFormat:@"(✉️ CMN)\\📭(%p)", _slot]
                       ];
+#else
+    _communicating = [[OCSPAsyncLock alloc] init];
+#endif
+
+#ifdef OCSPDEBUG_COND
     _empty = [[OCSPAsyncCondition alloc] initWithLabel:
               [NSString stringWithFormat:@"(📭 EMPTY)\\📭(%p)", _slot]
               ];
@@ -120,11 +126,14 @@ OCSPAsyncReadWriteChannel
                [NSString stringWithFormat:@"(📪 CLSED)\\📭(%p)", _slot]
                ];
 #else
-    _closed = [[OCSPAsyncLock alloc] init];
-    _communicating = [[OCSPAsyncLock alloc] init];
-    _writtenIn = [[OCSPAsyncCondition alloc] init];
-    _readOut = [[OCSPAsyncCondition alloc] init];
+    _empty = [[OCSPAsyncCondition alloc] init];
+    _writing = [[OCSPAsyncCondition alloc] init];
+    _read = [[OCSPAsyncCondition alloc] init];
+    _reading = [[OCSPAsyncCondition alloc] init];
+    _written = [[OCSPAsyncCondition alloc] init];
+    _closed = [[OCSPAsyncCondition alloc] init];
 #endif
+    
     return self;
 }
 
@@ -383,10 +392,6 @@ OCSPAsyncReadWriteChannel
             callback(NO);
             return;
         }
-        OCSPLog(@"\t %@ 📪(closing)",
-                [slot debugIDSel:nil
-                          caseID:nil]
-                );
         [slot close];
         [closed broadcast];
         callback(YES);
@@ -508,6 +513,7 @@ OCSPAsyncSelectionBuilder
           index < tries.count
           )) {
         hesitate();
+        return;
     }
     __auto_type const
     try = tries[index];
@@ -516,7 +522,7 @@ OCSPAsyncSelectionBuilder
         ^{
             [self try
              :tries
-             :index
+             :(index + 1)
              :determine
              :hesitate
              ];

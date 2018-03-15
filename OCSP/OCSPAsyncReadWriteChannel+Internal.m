@@ -56,18 +56,21 @@ OCSPAsyncChannelSlot {
         case
             OCSPAsyncChannelSlotStateEmpty
             : {
+                OCSPLog(@"\t %@ 📝(emtpy > writing)", self.debugID);
                 _data = data;
                 _state = OCSPAsyncChannelSlotStateWriting;
             } break;
         case
             OCSPAsyncChannelSlotStateReading
             : {
+                OCSPLog(@"\t %@ 📝(reading > written)", self.debugID);
                 _data = data;
                 _state = OCSPAsyncChannelSlotStateWritten;
             } break;
         case
             OCSPAsyncChannelSlotStateRead
             : {
+                OCSPLog(@"\t %@ 📝(read > empty)", self.debugID);
                 _data = nil;
                 _state = OCSPAsyncChannelSlotStateEmpty;
             } break;
@@ -85,6 +88,7 @@ OCSPAsyncChannelSlot {
         case
             OCSPAsyncChannelSlotStateEmpty
             : {
+                OCSPLog(@"\t %@ 📖(empty > reading)", self.debugID);
                 if (
                     outData != nil
                     ) {
@@ -95,6 +99,7 @@ OCSPAsyncChannelSlot {
         case
             OCSPAsyncChannelSlotStateWriting
             : {
+                OCSPLog(@"\t %@ 📖(writing > read)", self.debugID);
                 if (
                     outData != nil
                     ) {
@@ -105,6 +110,7 @@ OCSPAsyncChannelSlot {
         case
             OCSPAsyncChannelSlotStateWritten
             : {
+                OCSPLog(@"\t %@ 📖(written > empty)", self.debugID);
                 if (
                     outData != nil
                     ) {
@@ -120,6 +126,8 @@ OCSPAsyncChannelSlot {
 
 - (void)close
 {
+    
+    OCSPLog(@"\t %@ 📪(closing)", self.debugID);
     _data = nil;
     _state = OCSPAsyncChannelSlotStateClosed;
 }

@@ -32,7 +32,7 @@ OCSPAsyncCondition
     return self;
 }
 
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_COND
 - (instancetype)initWithLabel:(NSString *)label
 {
     if (!(
@@ -48,7 +48,7 @@ OCSPAsyncCondition
     [self.class wake:_waitings
                     :_seqQ
                     :^{}
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_COND
                     :_label
 #endif
      ];
@@ -63,7 +63,7 @@ OCSPAsyncCondition
     waitings = _waitings;
     __auto_type const
     seqQ = _seqQ;
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_COND
     __auto_type const
     label = _label;
 #endif
@@ -74,7 +74,7 @@ OCSPAsyncCondition
                   :lock
                   :seqQ
                   :unlock
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_COND
                   :label
 #endif
          ];
@@ -91,7 +91,7 @@ OCSPAsyncCondition
                      :lock
                      :_seqQ
                      :unlock
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_COND
                      :_label
 #endif
      ];
@@ -106,7 +106,7 @@ OCSPAsyncCondition
                     :check
                     :_seqQ
                     :callback
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_COND
                     :_label
 #endif
      ];
@@ -118,12 +118,14 @@ OCSPAsyncCondition
 :(OCSPAsyncConditionCheck)check
 :(dispatch_queue_t)seqQ
 :(dispatch_block_t)callback
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_COND
 :(NSString *)label
 #endif
 {
     dispatch_async(seqQ, ^{
+#ifdef OCSPDEBUG_COND
         OCSPLog(@"\t \t 🚦%@\t ⏸(waiting).", label);
+#endif
         [waitings addObject:[^{
             [lock lock:^(OCSPAsyncLockUnlock unlock) {
                 [self check:check
@@ -132,7 +134,7 @@ OCSPAsyncCondition
                            :lock
                            :seqQ
                            :unlock
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_COND
                            :(NSString *)label
 #endif
                  ];
@@ -146,7 +148,7 @@ OCSPAsyncCondition
 :(NSMutableArray<dispatch_block_t> *)waitings
 :(dispatch_queue_t)seqQ
 :(dispatch_block_t)callback
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_COND
 :(NSString *)label
 #endif
 {
@@ -154,7 +156,9 @@ OCSPAsyncCondition
         for (dispatch_block_t
              w in waitings
              ) {
+#ifdef OCSPDEBUG_COND
             OCSPLog(@"\t \t 🚦%@\t 🔊(waking).", label);
+#endif
             w();
         }
         [waitings removeAllObjects];
@@ -169,11 +173,13 @@ OCSPAsyncCondition
 :(id<OCSPAsyncLock>)lock
 :(dispatch_queue_t)seqQ
 :(dispatch_block_t)callback
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_COND
 :(NSString *)label
 #endif
 {
+#ifdef OCSPDEBUG_COND
     OCSPLog(@"\t \t 🚦%@\t 📏(checking).", label);
+#endif
     check
     (
      ^{ unlock(); },
@@ -183,7 +189,7 @@ OCSPAsyncCondition
                    :check
                    :seqQ
                    :unlock
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_COND
                    :(NSString *)label
 #endif
           ];

@@ -11,6 +11,14 @@
 #endif
 
 #ifdef OCSPDEBUG
+//#   define OCSPDEBUG_COND
+#endif
+
+#ifdef OCSPDEBUG
+//#   define OCSPDEBUG_LOCK
+#endif
+
+#ifdef OCSPDEBUG
 #   define OCSPLog(...) NSLog(__VA_ARGS__)
 #else
 #   define OCSPLog(...) (void)0

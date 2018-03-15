@@ -14,7 +14,7 @@ OCSPAsyncLock
 {
     dispatch_queue_t
     _workQ;
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_LOCK
     NSString *
     _label;
 #endif
@@ -29,7 +29,7 @@ OCSPAsyncLock
     return self;
 }
 
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_LOCK
 - (instancetype)initWithLabel:(NSString *)label
 {
     if (!(
@@ -44,15 +44,19 @@ OCSPAsyncLock
 {
     __auto_type const
     workQ = _workQ;
-#ifdef OCSPDEBUG
+#ifdef OCSPDEBUG_LOCK
     __auto_type const
     label = _label;
 #endif
     dispatch_async(workQ, ^{
         dispatch_suspend(workQ);
+#ifdef OCSPDEBUG_LOCK
         OCSPLog(@"\t \t \t 🔐%@\t 🔒(locking).", label);
+#endif
         lock(^{
+#ifdef OCSPDEBUG_LOCK
             OCSPLog(@"\t \t \t 🔐%@\t 🔓(unlocking).", label);
+#endif
             dispatch_resume(workQ);
         });
     });
