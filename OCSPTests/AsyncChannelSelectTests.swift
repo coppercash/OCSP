@@ -118,6 +118,15 @@ class AsyncChannelSelectTests: XCTestCase {
                 v1 = -1
             })
             $0.default {
+                c0.send(4200, with: {
+                    if !$0 { return }
+                    ex0s.fulfill()
+                })
+                c1.receive {
+                    if !$1 { return }
+                    v1 = Int($0!)
+                    ex1r.fulfill()
+                }
                 c0.receive {
                     if !$1 { return }
                     v0 = Int($0!)
@@ -128,15 +137,6 @@ class AsyncChannelSelectTests: XCTestCase {
                     ex1s.fulfill()
                 })
             }
-        }
-        c0.send(4200, with: {
-            if !$0 { return }
-            ex0s.fulfill()
-        })
-        c1.receive {
-            if !$1 { return }
-            v1 = Int($0!)
-            ex1r.fulfill()
         }
         wait(for: [ex0r, ex0s, ex1r, ex1s], timeout: 1.0)
         XCTAssertEqual(v0, 4200)

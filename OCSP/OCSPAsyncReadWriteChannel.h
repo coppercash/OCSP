@@ -22,17 +22,8 @@ OCSPAsyncReadWriteChannel<__covariant Data> : OCSPAsyncChannel<Data>
            with:(void(^)(BOOL ok))callback;
 @end
 
-typedef
-void(^OCSPAsyncSelectionDefaultRun)(void);
-@interface OCSPAsyncSelectionBuilder : NSObject
-- (void)default:(OCSPAsyncSelectionDefaultRun)run;
-@end
-
-typedef
-void(^OCSPAsyncSelectionBuildup)(OCSPAsyncSelectionBuilder *case_);
-FOUNDATION_EXPORT const
-void(^OCSPAsyncSelect)(OCSPAsyncSelectionBuildup);
-
+@class
+OCSPAsyncSelectionBuilder;
 @interface
 OCSPAsyncReadWriteChannel<Data> (Select)
 - (void)send:(Data)data

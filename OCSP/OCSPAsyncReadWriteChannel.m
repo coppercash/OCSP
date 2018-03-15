@@ -10,68 +10,15 @@
 #import "OCSPAsyncLock+Internal.h"
 #import "OCSPAsyncCondition+Internal.h"
 #import "OCSPDebug.h"
-/*
-typedef
-NSInteger OCSPAsyncSelectionCaseID;
-__auto_type const
-OCSPAsyncSelectionCaseIDNil = NSNotFound;
 
-@class
-OCSPAsyncSelection;
-@interface
-OCSPAsyncSelectionCase : NSObject
-@property (readonly) OCSPAsyncSelection* selection;
-@end
-@implementation
-OCSPAsyncSelectionCase
-{
-    OCSPAsyncSelection __unsafe_unretained *
-    _selection;
-}
-- (OCSPAsyncSelection *)selection { return _selection; }
-@end
-
-@interface
-OCSPAsyncSelection : NSObject
-@property (readonly) BOOL isDetermined;
-- (void)determine;
-- (void)halt:(OCSPAsyncSelectionCaseID)caseID;
-@end
-@implementation
-OCSPAsyncSelection
-{
-    BOOL
-    _isDetermined;
-    uint64
-    _waitingCases;
-}
-- (BOOL)isDetermined { return _isDetermined; }
-
-- (void)determine
-{
-    _isDetermined = YES;
-}
-
-- (void)halt:(OCSPAsyncSelectionCaseID)caseID
-{
-    _waitingCases |= (1 << caseID);
-}
-
-- (BOOL)areAllCasesHalting:(NSUInteger)caseCount
-{
-    __auto_type const
-    mask = (uint64)~(-1 << caseCount);  // 0…01…1
-    return ((_waitingCases & mask) ^ mask) == 0;
-}
-
-@end
-*/
 typedef
 id Data;
 typedef
 void(^OCSPAsyncChannelReceive)(Data data, BOOL ok);
 typedef
 void(^OCSPAsyncChannelSend)(BOOL ok);
+typedef
+void(^OCSPAsyncChannelClose)(BOOL ok);
 typedef
 OCSPAsyncCondition * OCSPAsyncConditionRef;
 
@@ -155,7 +102,7 @@ OCSPAsyncReadWriteChannel
 // MARK: - Public
 
 - (void)send:(Data __nullable)data
-        with:(void(^)(BOOL ok))callback
+        with:(OCSPAsyncChannelSend)callback
 {
     [self send:data
             on:self.class.defaultCallbackQueue
@@ -164,7 +111,7 @@ OCSPAsyncReadWriteChannel
 
 - (void)send:(Data __nullable)data
           on:(dispatch_queue_t)queue
-        with:(void(^)(BOOL ok))callback
+        with:(OCSPAsyncChannelSend)callback
 {
     [self.class send
      :_slot
@@ -185,14 +132,14 @@ OCSPAsyncReadWriteChannel
      ];
 }
 
-- (void)receive:(void(^)(Data __nullable data, BOOL ok))callback
+- (void)receive:(OCSPAsyncChannelReceive)callback
 {
     [self receiveOn:self.class.defaultCallbackQueue
                with:callback];
 }
 
 - (void)receiveOn:(dispatch_queue_t)queue
-             with:(void(^)(Data __nullable data, BOOL ok))callback
+             with:(OCSPAsyncChannelReceive)callback
 {
     [self.class receive
      :_slot
@@ -211,14 +158,14 @@ OCSPAsyncReadWriteChannel
      ];
 }
 
-- (void)close:(void(^)(BOOL ok))callback
+- (void)close:(OCSPAsyncChannelClose)callback
 {
     [self closeOn:self.class.defaultCallbackQueue
              with:callback];
 }
 
 - (void)closeOn:(dispatch_queue_t)queue
-           with:(void(^)(BOOL ok))callback
+           with:(OCSPAsyncChannelClose)callback
 {
     [self.class close
      :_slot
@@ -382,7 +329,7 @@ OCSPAsyncReadWriteChannel
 :(OCSPAsyncChannelSlot *)slot
 :(OCSPAsyncLock *)communicating
 :(OCSPAsyncCondition *)closed
-:(void(^)(BOOL))callback
+:(OCSPAsyncChannelClose)callback
 {
     [communicating lock:^(OCSPAsyncLockUnlock unlock) {
         if (
@@ -401,172 +348,11 @@ OCSPAsyncReadWriteChannel
 
 @end
 
-typedef
-OCSPAsyncConditionLeave OCSPAsyncSelectDetermine;
-typedef
-OCSPAsyncConditionWait OCSPAsyncSelectHesitate;
-typedef
-void(^OCSPAsyncSelectTry)
-(
- OCSPAsyncSelectDetermine determine,
- OCSPAsyncSelectHesitate hesitate
- );
-
-@interface
-OCSPAsyncSelectionBuilder ()
-@property (readonly, nonatomic) NSMutableArray<OCSPAsyncLock *> *locks;
-@property (readonly, nonatomic) NSMutableArray<OCSPAsyncCondition *> *conditions;
-@property (readonly, nonatomic) NSMutableArray<OCSPAsyncSelectTry> *tries;
-@end
-@implementation
-OCSPAsyncSelectionBuilder
-
-- (instancetype)init
-{
-    if (!(
-          self = [super init]
-          )) { return nil; }
-    _locks = [[NSMutableArray alloc] init];
-    _conditions = [[NSMutableArray alloc] init];
-    _tries = [[NSMutableArray alloc] init];
-//    _selection = [[OCSPAsyncSelection alloc] init];
-//#ifdef OCSPDEBUG
-//    _selecting = [[OCSPAsyncLock alloc] initWithLabel:
-//                  [NSString stringWithFormat:@"(⚔️ SLT)\\⚔️(%p)", _selection]
-//                  ];
-//    _selected = [[OCSPAsyncCondition alloc] initWithLabel:
-//                 [NSString stringWithFormat:@"(⚔️ SLTED)\\⚔️(%p)", _selection]
-//                 ];
-//    _halted = [[OCSPAsyncCondition alloc] initWithLabel:
-//                    [NSString stringWithFormat:@"(⏸ HLTED)\\⚔️(%p)", _selection]
-//                    ];
-//#else
-//    _selected = [[OCSPAsyncCondition alloc] init];
-//    _halted = [[OCSPAsyncCondition alloc] init];
-//    _selecting = [[OCSPAsyncLock alloc] init];
-//#endif
-    return self;
-}
-
-- (void)default:(OCSPAsyncSelectionDefaultRun)run
-{
-    
-    [_tries addObject:
-     [
-      ^(
-        OCSPAsyncSelectDetermine determine,
-        OCSPAsyncSelectHesitate hesitate
-        ){
-          determine();
-          !run ?: run();
-      }
-      copy]
-     ];
-}
-/*
-+ (void)default_
-:(OCSPAsyncSelection *)selection
-:(NSUInteger)caseCount
-:(OCSPAsyncLock *)selecting
-:(OCSPAsyncCondition *)selected
-:(OCSPAsyncCondition *)halted
-:(OCSPAsyncSelectionDefaultRun)callback
-{
-    __auto_type const
-    cond = [OCSPAsyncCombinedCondition combined:
-            selected,
-            halted,
-            nil];
-    [cond withLock:selecting
-             check:
-     ^(OCSPAsyncConditionLeave leave, OCSPAsyncConditionWait wait) {
-         if (
-             selection.isDetermined
-             ) {
-             OCSPLog(@"\t ⚔️(%p)\t ❌(selected out)\\🍚.", selection);
-             leave();
-         }
-         else if (
-                  [selection areAllCasesHalting:caseCount]
-                  ) {
-             OCSPLog(@"\t ⚔️(%p)\t ✅(done)\\🍚.", selection);
-             [selection determine];
-             [selected broadcast];
-             leave();
-             callback();
-         }
-         else {
-             OCSPLog(@"\t ⚔️(%p)\t ⏸(wait)\\🍚.", selection);
-             wait();
-         }
-     }];
-}
-*/
-
-+ (void)try
-:(NSArray<OCSPAsyncConditionCheck> *)tries
-:(NSInteger)index
-:(OCSPAsyncSelectDetermine)determine
-:(OCSPAsyncSelectHesitate)hesitate
-{
-    if (!(
-          index < tries.count
-          )) {
-        hesitate();
-        return;
-    }
-    __auto_type const
-    try = tries[index];
-    try(
-        determine,
-        ^{
-            [self try
-             :tries
-             :(index + 1)
-             :determine
-             :hesitate
-             ];
-        }
-        );
-}
-
-@end
-
-const
-void(^OCSPAsyncSelect)(OCSPAsyncSelectionBuildup) = ^(OCSPAsyncSelectionBuildup buildup) {
-    __auto_type const
-    builder = [[OCSPAsyncSelectionBuilder alloc] init];
-    buildup(builder);
-    __auto_type const
-    lock = [[OCSPAsyncCombinedLock alloc] initWithLocks:builder.locks];
-    __auto_type const
-    condition = [[OCSPAsyncCombinedCondition alloc] initWithConditions:builder.conditions];
-    __auto_type const
-    tries = builder.tries;
-    [condition withLock:lock
-                  check:
-     ^(OCSPAsyncConditionLeave leave, OCSPAsyncConditionWait wait) {
-        [OCSPAsyncSelectionBuilder try
-         :tries
-         :0
-         :leave
-         :wait
-         ];
-     }];
-};
+#import "OCSPAsyncSelect+Internal.h"
 
 @implementation
 OCSPAsyncReadWriteChannel (Select)
 
-//         if (
-//             selection.isDetermined
-//             ) {
-//             OCSPLog(@"\t %@ ❌(selected out)\\📩.",
-//                     [slot debugIDSel:selection
-//                               caseID:@(caseID)]
-//                     );
-//             leave();
-//         }
 + (void)receive
 :(OCSPAsyncSelectionBuilder *)builder
 :(OCSPAsyncChannelSlot *)slot
