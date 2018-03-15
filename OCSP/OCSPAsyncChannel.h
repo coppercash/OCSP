@@ -6,7 +6,7 @@
 //  Copyright © 2018 coppercash. All rights reserved.
 //
 
-#import "OCSPChannel.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,7 +20,7 @@ OCSPAsyncChannel<__covariant Data : id> : NSObject
 @class
 OCSPAsyncSelectionBuilder;
 @interface
-OCSPAsyncChannel<Data> (Select)
+OCSPAsyncChannel<__covariant Data : id> (Select)
 - (void)receiveIn:(OCSPAsyncSelectionBuilder *)case_
              with:(void(^)(Data __nullable data, BOOL ok))callback;
 - (void)receiveIn:(OCSPAsyncSelectionBuilder *)case_

@@ -26,27 +26,6 @@ OCSPAsyncChannelSlot {
     _state = OCSPAsyncChannelSlotStateEmpty;
     return self;
 }
-/*
-- (void)empty
-{
-    switch (
-            _state
-            ) {
-        case
-            OCSPAsyncChannelSlotStateWritten
-            :
-        case
-            OCSPAsyncChannelSlotStateRead
-            : {
-                _data = nil;
-                _state = OCSPAsyncChannelSlotStateEmpty;
-            } break;
-        default:
-            NSAssert(NO, @"Invalid state transmission.");
-            break;
-    }
-}
- */
 
 - (void)write:(id)data
 {

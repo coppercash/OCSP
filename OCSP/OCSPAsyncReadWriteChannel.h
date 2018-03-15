@@ -25,7 +25,7 @@ OCSPAsyncReadWriteChannel<__covariant Data> : OCSPAsyncChannel<Data>
 @class
 OCSPAsyncSelectionBuilder;
 @interface
-OCSPAsyncReadWriteChannel<Data> (Select)
+OCSPAsyncReadWriteChannel<__covariant Data> (Select)
 - (void)send:(Data)data
           in:(OCSPAsyncSelectionBuilder *)case_
           with:(void(^)(BOOL ok))callback;
