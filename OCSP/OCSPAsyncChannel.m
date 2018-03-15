@@ -7,9 +7,16 @@
 //
 
 #import "OCSPAsyncChannel.h"
+#import "NSArray+OCSP.h"
 
 @implementation
 OCSPAsyncChannel
+
++ (void)__import__
+{
+    __auto_type const __unused
+    nsarray_ocsp_import = nsarray_ocsp_export;
+}
 
 - (void)receive:(void(^)(id, BOOL))callback
 {

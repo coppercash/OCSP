@@ -64,6 +64,8 @@ OCSPAsyncLock
 
 @end
 
+#import "NSArray+OCSP.h"
+
 @implementation
 OCSPAsyncCombinedLock
 {
@@ -76,7 +78,7 @@ OCSPAsyncCombinedLock
     if (!(
           self = [super init]
           )) { return nil; }
-    _locks = locks;
+    _locks = locks.ocsp_duplicateFreeCopy;
     return self;
 }
 
@@ -98,7 +100,7 @@ OCSPAsyncCombinedLock
         }
         va_end(args);
     }
-    return [[self alloc] initWithLocks:buffer.copy];
+    return [[self alloc] initWithLocks:buffer];
 }
 
 - (void)lock:(OCSPAsyncLockRun)run

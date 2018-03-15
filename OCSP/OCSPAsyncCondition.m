@@ -218,6 +218,8 @@ OCSPAsyncConditionWaitGroup
 
 @end
 
+#import "NSArray+OCSP.h"
+
 @implementation
 OCSPAsyncCombinedCondition
 {
@@ -230,7 +232,7 @@ OCSPAsyncCombinedCondition
     if (!(
           self = [super init]
           )) { return nil; }
-    _conditions = conditions;
+    _conditions = conditions.ocsp_duplicateFreeCopy;
     return self;
 }
 
@@ -252,7 +254,7 @@ OCSPAsyncCombinedCondition
         }
         va_end(args);
     }
-    return [[self alloc] initWithConditions:buffer.copy];
+    return [[self alloc] initWithConditions:buffer];
 }
 
 - (void)withLock:(id<OCSPAsyncLock>)lock
