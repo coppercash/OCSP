@@ -15,6 +15,10 @@
 		3D27C858205B4FEE00E59CA8 /* libOCSP_RXPromise.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D27C846205B4FD900E59CA8 /* libOCSP_RXPromise.a */; };
 		3D27C85E205B510B00E59CA8 /* libOCSP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC7363D202D340D00C186EE /* libOCSP.a */; };
 		3D27C85F205B520C00E59CA8 /* libRXPromise.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D27C860205B520C00E59CA8 /* libRXPromise.a */; };
+		3D27C8BD205B904D00E59CA8 /* UsageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D27C8BC205B904D00E59CA8 /* UsageTests.m */; };
+		3D27C8C6205B910A00E59CA8 /* libOCSP_RXPromise.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D27C846205B4FD900E59CA8 /* libOCSP_RXPromise.a */; };
+		3D27C8C7205B910A00E59CA8 /* libOCSP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC7363D202D340D00C186EE /* libOCSP.a */; };
+		3D27C8C9205B931600E59CA8 /* OCSPShortcuts.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D27C8C8205B931600E59CA8 /* OCSPShortcuts.m */; };
 		3D89A55A2050F81100304ED7 /* OCSPAsyncLock.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D89A5582050F81100304ED7 /* OCSPAsyncLock.h */; };
 		3D89A55B2050F81100304ED7 /* OCSPAsyncLock.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D89A5592050F81100304ED7 /* OCSPAsyncLock.m */; };
 		3D89A55E2050F8B200304ED7 /* OCSPAsyncCondition.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D89A55C2050F8B200304ED7 /* OCSPAsyncCondition.h */; };
@@ -38,11 +42,26 @@
 		BE857628202E954800BEBD43 /* OCSPAsyncChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */; };
 		BE857629202E954800BEBD43 /* OCSPAsyncChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */; };
 		D7C5D9AE6528580D613A58E2 /* libPods-OCSP_RXPromise_Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BAED30640459F5D2C492CF1 /* libPods-OCSP_RXPromise_Tests.a */; };
+		E700D1530032AA46771B94BD /* libPods-UsageTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B2A64832798D9F33D08ED6E /* libPods-UsageTests.a */; };
 		F33CCB9CB25994301318BD28 /* libPods-OCSP_RXPromise.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 262C915368E5D2F3BC9A47DC /* libPods-OCSP_RXPromise.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		3D27C859205B4FEE00E59CA8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DC73635202D340D00C186EE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D27C845205B4FD900E59CA8;
+			remoteInfo = OCSP_RXPromise;
+		};
+		3D27C8C2205B905E00E59CA8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DC73635202D340D00C186EE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3DC7363C202D340D00C186EE;
+			remoteInfo = OCSP;
+		};
+		3D27C8C4205B905E00E59CA8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3DC73635202D340D00C186EE /* Project object */;
 			proxyType = 1;
@@ -59,8 +78,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0C0B4BBCAA848981DE7995EA /* Pods-UsageTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UsageTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UsageTests/Pods-UsageTests.debug.xcconfig"; sourceTree = "<group>"; };
+		1B2A64832798D9F33D08ED6E /* libPods-UsageTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UsageTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2572E90F571E8974C97F23BA /* Pods-OCSP+RXPromise.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSP+RXPromise.release.xcconfig"; path = "Pods/Target Support Files/Pods-OCSP+RXPromise/Pods-OCSP+RXPromise.release.xcconfig"; sourceTree = "<group>"; };
 		262C915368E5D2F3BC9A47DC /* libPods-OCSP_RXPromise.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OCSP_RXPromise.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		334154B363878E5F2A5E1A90 /* Pods-UsageTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UsageTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UsageTests/Pods-UsageTests.release.xcconfig"; sourceTree = "<group>"; };
 		3D17E07A2053870C001D3144 /* OCSPDebug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPDebug.h; sourceTree = "<group>"; };
 		3D17E07B20538B5A001D3144 /* OCSPAsyncLock+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCSPAsyncLock+Internal.h"; sourceTree = "<group>"; };
 		3D27C846205B4FD900E59CA8 /* libOCSP_RXPromise.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOCSP_RXPromise.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,6 +92,10 @@
 		3D27C855205B4FEE00E59CA8 /* OCSP_RXPromise_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSP_RXPromise_Tests.m; sourceTree = "<group>"; };
 		3D27C857205B4FEE00E59CA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D27C860205B520C00E59CA8 /* libRXPromise.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRXPromise.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D27C8BA205B904D00E59CA8 /* UsageTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UsageTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D27C8BC205B904D00E59CA8 /* UsageTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UsageTests.m; sourceTree = "<group>"; };
+		3D27C8BE205B904D00E59CA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3D27C8C8205B931600E59CA8 /* OCSPShortcuts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPShortcuts.m; sourceTree = "<group>"; };
 		3D89A5582050F81100304ED7 /* OCSPAsyncLock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncLock.h; sourceTree = "<group>"; };
 		3D89A5592050F81100304ED7 /* OCSPAsyncLock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncLock.m; sourceTree = "<group>"; };
 		3D89A55C2050F8B200304ED7 /* OCSPAsyncCondition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncCondition.h; sourceTree = "<group>"; };
@@ -133,6 +159,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3D27C8B7205B904D00E59CA8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D27C8C6205B910A00E59CA8 /* libOCSP_RXPromise.a in Frameworks */,
+				3D27C8C7205B910A00E59CA8 /* libOCSP.a in Frameworks */,
+				E700D1530032AA46771B94BD /* libPods-UsageTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3DC7363A202D340D00C186EE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -168,6 +204,8 @@
 				A98FDA598BA2F8F3941A68A7 /* Pods-OCSP_RXPromise.release.xcconfig */,
 				815528606040B6E32F26217A /* Pods-OCSP_RXPromise_Tests.debug.xcconfig */,
 				589A66E3C8A777B74F77B823 /* Pods-OCSP_RXPromise_Tests.release.xcconfig */,
+				0C0B4BBCAA848981DE7995EA /* Pods-UsageTests.debug.xcconfig */,
+				334154B363878E5F2A5E1A90 /* Pods-UsageTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -190,6 +228,15 @@
 			path = OCSP_RXPromise_Tests;
 			sourceTree = "<group>";
 		};
+		3D27C8BB205B904D00E59CA8 /* UsageTests */ = {
+			isa = PBXGroup;
+			children = (
+				3D27C8BC205B904D00E59CA8 /* UsageTests.m */,
+				3D27C8BE205B904D00E59CA8 /* Info.plist */,
+			);
+			path = UsageTests;
+			sourceTree = "<group>";
+		};
 		3DC73634202D340D00C186EE = {
 			isa = PBXGroup;
 			children = (
@@ -197,6 +244,7 @@
 				3DC7364E202D342500C186EE /* OCSPTests */,
 				3D27C847205B4FD900E59CA8 /* OCSP_RXPromise */,
 				3D27C854205B4FEE00E59CA8 /* OCSP_RXPromise_Tests */,
+				3D27C8BB205B904D00E59CA8 /* UsageTests */,
 				3DC7363E202D340D00C186EE /* Products */,
 				039641AA6D8D06B75C56EE02 /* Pods */,
 				D93B26433253548D37062344 /* Frameworks */,
@@ -210,6 +258,7 @@
 				3DC7364D202D342500C186EE /* OCSPTests.xctest */,
 				3D27C846205B4FD900E59CA8 /* libOCSP_RXPromise.a */,
 				3D27C853205B4FEE00E59CA8 /* OCSP_RXPromise_Tests.xctest */,
+				3D27C8BA205B904D00E59CA8 /* UsageTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -237,6 +286,7 @@
 				3DF4D5F72059FE1D00084143 /* NSArray+OCSP.m */,
 				3D17E07A2053870C001D3144 /* OCSPDebug.h */,
 				BE85762C202EB49E00BEBD43 /* OCSPShortcuts.h */,
+				3D27C8C8205B931600E59CA8 /* OCSPShortcuts.m */,
 			);
 			path = OCSP;
 			sourceTree = "<group>";
@@ -263,6 +313,7 @@
 				DF73B676D0AC49C57DF9AE0D /* libPods-OCSP_RXPromiseTests.a */,
 				262C915368E5D2F3BC9A47DC /* libPods-OCSP_RXPromise.a */,
 				9BAED30640459F5D2C492CF1 /* libPods-OCSP_RXPromise_Tests.a */,
+				1B2A64832798D9F33D08ED6E /* libPods-UsageTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -339,6 +390,28 @@
 			productReference = 3D27C853205B4FEE00E59CA8 /* OCSP_RXPromise_Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		3D27C8B9205B904D00E59CA8 /* UsageTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D27C8C1205B904D00E59CA8 /* Build configuration list for PBXNativeTarget "UsageTests" */;
+			buildPhases = (
+				8608D4CCC8D1CF6D1978A269 /* [CP] Check Pods Manifest.lock */,
+				3D27C8B6205B904D00E59CA8 /* Sources */,
+				3D27C8B7205B904D00E59CA8 /* Frameworks */,
+				3D27C8B8205B904D00E59CA8 /* Resources */,
+				DEC445C313A5C4A2E5172D7E /* [CP] Embed Pods Frameworks */,
+				203A475B29D9FA0CCB08406C /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3D27C8C3205B905E00E59CA8 /* PBXTargetDependency */,
+				3D27C8C5205B905E00E59CA8 /* PBXTargetDependency */,
+			);
+			name = UsageTests;
+			productName = UsageTests;
+			productReference = 3D27C8BA205B904D00E59CA8 /* UsageTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		3DC7363C202D340D00C186EE /* OCSP */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3DC73646202D340D00C186EE /* Build configuration list for PBXNativeTarget "OCSP" */;
@@ -396,6 +469,10 @@
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 					};
+					3D27C8B9205B904D00E59CA8 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					3DC7363C202D340D00C186EE = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 0900;
@@ -424,12 +501,20 @@
 				3DC7364C202D342500C186EE /* OCSPTests */,
 				3D27C845205B4FD900E59CA8 /* OCSP_RXPromise */,
 				3D27C852205B4FEE00E59CA8 /* OCSP_RXPromise_Tests */,
+				3D27C8B9205B904D00E59CA8 /* UsageTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		3D27C851205B4FEE00E59CA8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D27C8B8205B904D00E59CA8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -446,6 +531,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		203A475B29D9FA0CCB08406C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UsageTests/Pods-UsageTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		21A54E18030B08E08950C39B /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -542,6 +642,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		8608D4CCC8D1CF6D1978A269 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-UsageTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		8C1B97C74E99C418C77C1EEF /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -570,6 +688,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OCSP/Pods-OCSP-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DEC445C313A5C4A2E5172D7E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UsageTests/Pods-UsageTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F3E0D6F3BF9FDEC279BA34F2 /* [CP] Check Pods Manifest.lock */ = {
@@ -627,6 +760,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3D27C8B6205B904D00E59CA8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D27C8BD205B904D00E59CA8 /* UsageTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3DC73639202D340D00C186EE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -637,6 +778,7 @@
 				BE748E0D204161EC00FE6749 /* OCSPAsyncReadWriteChannel+Internal.m in Sources */,
 				BE748DED203D39F600FE6749 /* OCSPAsyncReadWriteChannel.m in Sources */,
 				BE857629202E954800BEBD43 /* OCSPAsyncChannel.m in Sources */,
+				3D27C8C9205B931600E59CA8 /* OCSPShortcuts.m in Sources */,
 				3D89A55B2050F81100304ED7 /* OCSPAsyncLock.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -658,6 +800,16 @@
 			isa = PBXTargetDependency;
 			target = 3D27C845205B4FD900E59CA8 /* OCSP_RXPromise */;
 			targetProxy = 3D27C859205B4FEE00E59CA8 /* PBXContainerItemProxy */;
+		};
+		3D27C8C3205B905E00E59CA8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3DC7363C202D340D00C186EE /* OCSP */;
+			targetProxy = 3D27C8C2205B905E00E59CA8 /* PBXContainerItemProxy */;
+		};
+		3D27C8C5205B905E00E59CA8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D27C845205B4FD900E59CA8 /* OCSP_RXPromise */;
+			targetProxy = 3D27C8C4205B905E00E59CA8 /* PBXContainerItemProxy */;
 		};
 		3DC73654202D342500C186EE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -733,6 +885,44 @@
 				INFOPLIST_FILE = OCSP_RXPromise_Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.coppercash.OCSP-RXPromise-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		3D27C8BF205B904D00E59CA8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0C0B4BBCAA848981DE7995EA /* Pods-UsageTests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(PROJECT_DIR)\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/RXPromise\"",
+				);
+				INFOPLIST_FILE = UsageTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.coppercash.UsageTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3D27C8C0205B904D00E59CA8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 334154B363878E5F2A5E1A90 /* Pods-UsageTests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(PROJECT_DIR)\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/RXPromise\"",
+				);
+				INFOPLIST_FILE = UsageTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.coppercash.UsageTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -927,6 +1117,15 @@
 			buildConfigurations = (
 				3D27C85C205B4FEE00E59CA8 /* Debug */,
 				3D27C85D205B4FEE00E59CA8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D27C8C1205B904D00E59CA8 /* Build configuration list for PBXNativeTarget "UsageTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D27C8BF205B904D00E59CA8 /* Debug */,
+				3D27C8C0205B904D00E59CA8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

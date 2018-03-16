@@ -46,12 +46,12 @@ void(^OCSPRXSelectionBuildup)(OCSPRXSelectionBuilder *_);
 FOUNDATION_EXPORT const
 RXPromise *(^OCSPRXSelect)(OCSPRXSelectionBuildup);
 
-FOUNDATION_EXPORT const
-RXPromise *(^ORXSelect)(OCSPRXSelectionBuildup);
 @compatibility_alias
 ORXSelecting OCSPRXSelectionBuilder;
 @compatibility_alias
 ORXSelected OCSRXSelectionResult;
+FOUNDATION_EXPORT const
+RXPromise *(^ORXSelect)(OCSPRXSelectionBuildup);
 
 NS_ASSUME_NONNULL_END
 

@@ -27,3 +27,7 @@ target 'OCSP_RXPromise' do
     pod 'RXPromise', '~> 1.0'
   end
 end
+
+target 'UsageTests' do
+    pod 'RXPromise', '~> 1.0'
+end

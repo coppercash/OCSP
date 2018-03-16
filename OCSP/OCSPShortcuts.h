@@ -6,23 +6,20 @@
 //  Copyright © 2018 coppercash. All rights reserved.
 //
 
-@class
-OCSPChannel<D>;
-@compatibility_alias
-Chan OCSPChannel;
-@class
-OCSPReadWriteChannel<D>;
-@compatibility_alias
-RWChan OCSPReadWriteChannel;
-@class
-OCSPBufferedReadWriteChannel<D>;
-@compatibility_alias
-BRWChan OCSPBufferedReadWriteChannel;
-@class
-OCSPAsyncChannel<D>;
+#import "OCSPAsyncChannel.h"
+
 @compatibility_alias
 AChan OCSPAsyncChannel;
-@class
-OCSPAsyncReadWriteChannel<D>;
+
+#import "OCSPAsyncReadWriteChannel.h"
+
 @compatibility_alias
 ARWChan OCSPAsyncReadWriteChannel;
+
+#import "OCSPAsyncSelect.h"
+
+@compatibility_alias
+ASelecting OCSPAsyncSelectionBuilder;
+
+FOUNDATION_EXPORT const
+void(^ASelect)(void(^)(ASelecting *));
