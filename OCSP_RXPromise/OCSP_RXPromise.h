@@ -15,12 +15,12 @@ RXPromise;
 
 @interface
 OCSPAsyncChannel<__covariant Data> (RXPromise)
-- (RXPromise *)rx_receive;
+- (RXPromise *)orx_receive;
 @end
 
 @interface
 OCSPAsyncReadWriteChannel<__covariant Data> (RXPromise)
-- (RXPromise *)rx_send:(Data __nullable)data;
+- (RXPromise *)orx_send:(Data __nullable)data;
 @end
 
 @interface
@@ -45,6 +45,13 @@ typedef
 void(^OCSPRXSelectionBuildup)(OCSPRXSelectionBuilder *_);
 FOUNDATION_EXPORT const
 RXPromise *(^OCSPRXSelect)(OCSPRXSelectionBuildup);
+
+FOUNDATION_EXPORT const
+RXPromise *(^ORXSelect)(OCSPRXSelectionBuildup);
+@compatibility_alias
+ORXSelecting OCSPRXSelectionBuilder;
+@compatibility_alias
+ORXSelected OCSRXSelectionResult;
 
 NS_ASSUME_NONNULL_END
 

@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		1B423F816A13F08A5167DB0A /* libPods-OCSP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0AF509E155682FA9FBA550D /* libPods-OCSP.a */; };
 		3D17E07D20538B5A001D3144 /* OCSPAsyncLock+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D17E07B20538B5A001D3144 /* OCSPAsyncLock+Internal.h */; };
+		3D27C849205B4FD900E59CA8 /* OCSP_RXPromise.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D27C848205B4FD900E59CA8 /* OCSP_RXPromise.h */; };
+		3D27C84B205B4FD900E59CA8 /* OCSP_RXPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D27C84A205B4FD900E59CA8 /* OCSP_RXPromise.m */; };
+		3D27C856205B4FEE00E59CA8 /* OCSP_RXPromise_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D27C855205B4FEE00E59CA8 /* OCSP_RXPromise_Tests.m */; };
+		3D27C858205B4FEE00E59CA8 /* libOCSP_RXPromise.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D27C846205B4FD900E59CA8 /* libOCSP_RXPromise.a */; };
+		3D27C85E205B510B00E59CA8 /* libOCSP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC7363D202D340D00C186EE /* libOCSP.a */; };
+		3D27C85F205B520C00E59CA8 /* libRXPromise.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D27C860205B520C00E59CA8 /* libRXPromise.a */; };
 		3D89A55A2050F81100304ED7 /* OCSPAsyncLock.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D89A5582050F81100304ED7 /* OCSPAsyncLock.h */; };
 		3D89A55B2050F81100304ED7 /* OCSPAsyncLock.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D89A5592050F81100304ED7 /* OCSPAsyncLock.m */; };
 		3D89A55E2050F8B200304ED7 /* OCSPAsyncCondition.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D89A55C2050F8B200304ED7 /* OCSPAsyncCondition.h */; };
@@ -21,9 +27,6 @@
 		3DF4D635205A392300084143 /* OCSPAsyncSelect.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DF4D633205A392300084143 /* OCSPAsyncSelect.h */; };
 		3DF4D636205A392300084143 /* OCSPAsyncSelect.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF4D634205A392300084143 /* OCSPAsyncSelect.m */; };
 		3DF4D639205A39DD00084143 /* OCSPAsyncSelect+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DF4D637205A39DD00084143 /* OCSPAsyncSelect+Internal.h */; };
-		3DF4D775205A8F9300084143 /* OCSP_RXPromise.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DF4D774205A8F9300084143 /* OCSP_RXPromise.h */; };
-		3DF4D777205A8F9300084143 /* OCSP_RXPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF4D776205A8F9300084143 /* OCSP_RXPromise.m */; };
-		70B759675A3B5A90F9877F7B /* libPods-OCSP+RXPromise.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1067FBE4E23F530DAADD971 /* libPods-OCSP+RXPromise.a */; };
 		BD4988E9E22E01C295735A45 /* libPods-OCSPTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F00CFEEB959008D968509FA /* libPods-OCSPTests.a */; };
 		BE3EE1122055442C00FA6389 /* OCSPAsyncCondition+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = BE3EE1102055442C00FA6389 /* OCSPAsyncCondition+Internal.h */; };
 		BE748DEC203D39F600FE6749 /* OCSPAsyncReadWriteChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE748DEA203D39F600FE6749 /* OCSPAsyncReadWriteChannel.h */; };
@@ -34,9 +37,18 @@
 		BE748E182042462400FE6749 /* AsyncChannelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE748E172042462400FE6749 /* AsyncChannelTests.swift */; };
 		BE857628202E954800BEBD43 /* OCSPAsyncChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */; };
 		BE857629202E954800BEBD43 /* OCSPAsyncChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */; };
+		D7C5D9AE6528580D613A58E2 /* libPods-OCSP_RXPromise_Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BAED30640459F5D2C492CF1 /* libPods-OCSP_RXPromise_Tests.a */; };
+		F33CCB9CB25994301318BD28 /* libPods-OCSP_RXPromise.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 262C915368E5D2F3BC9A47DC /* libPods-OCSP_RXPromise.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3D27C859205B4FEE00E59CA8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DC73635202D340D00C186EE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D27C845205B4FD900E59CA8;
+			remoteInfo = OCSP_RXPromise;
+		};
 		3DC73653202D342500C186EE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3DC73635202D340D00C186EE /* Project object */;
@@ -48,8 +60,16 @@
 
 /* Begin PBXFileReference section */
 		2572E90F571E8974C97F23BA /* Pods-OCSP+RXPromise.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSP+RXPromise.release.xcconfig"; path = "Pods/Target Support Files/Pods-OCSP+RXPromise/Pods-OCSP+RXPromise.release.xcconfig"; sourceTree = "<group>"; };
+		262C915368E5D2F3BC9A47DC /* libPods-OCSP_RXPromise.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OCSP_RXPromise.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D17E07A2053870C001D3144 /* OCSPDebug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPDebug.h; sourceTree = "<group>"; };
 		3D17E07B20538B5A001D3144 /* OCSPAsyncLock+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCSPAsyncLock+Internal.h"; sourceTree = "<group>"; };
+		3D27C846205B4FD900E59CA8 /* libOCSP_RXPromise.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOCSP_RXPromise.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D27C848205B4FD900E59CA8 /* OCSP_RXPromise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSP_RXPromise.h; sourceTree = "<group>"; };
+		3D27C84A205B4FD900E59CA8 /* OCSP_RXPromise.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSP_RXPromise.m; sourceTree = "<group>"; };
+		3D27C853205B4FEE00E59CA8 /* OCSP_RXPromise_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OCSP_RXPromise_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D27C855205B4FEE00E59CA8 /* OCSP_RXPromise_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSP_RXPromise_Tests.m; sourceTree = "<group>"; };
+		3D27C857205B4FEE00E59CA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3D27C860205B520C00E59CA8 /* libRXPromise.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRXPromise.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D89A5582050F81100304ED7 /* OCSPAsyncLock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncLock.h; sourceTree = "<group>"; };
 		3D89A5592050F81100304ED7 /* OCSPAsyncLock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncLock.m; sourceTree = "<group>"; };
 		3D89A55C2050F8B200304ED7 /* OCSPAsyncCondition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncCondition.h; sourceTree = "<group>"; };
@@ -64,14 +84,17 @@
 		3DF4D633205A392300084143 /* OCSPAsyncSelect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncSelect.h; sourceTree = "<group>"; };
 		3DF4D634205A392300084143 /* OCSPAsyncSelect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncSelect.m; sourceTree = "<group>"; };
 		3DF4D637205A39DD00084143 /* OCSPAsyncSelect+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCSPAsyncSelect+Internal.h"; sourceTree = "<group>"; };
-		3DF4D772205A8F9200084143 /* libOCSP+RXPromise.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libOCSP+RXPromise.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3DF4D774205A8F9300084143 /* OCSP_RXPromise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSP_RXPromise.h; sourceTree = "<group>"; };
-		3DF4D776205A8F9300084143 /* OCSP_RXPromise.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSP_RXPromise.m; sourceTree = "<group>"; };
 		55801746C57BF45B40E4798C /* Pods-OCSP.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSP.release.xcconfig"; path = "Pods/Target Support Files/Pods-OCSP/Pods-OCSP.release.xcconfig"; sourceTree = "<group>"; };
+		589A66E3C8A777B74F77B823 /* Pods-OCSP_RXPromise_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSP_RXPromise_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-OCSP_RXPromise_Tests/Pods-OCSP_RXPromise_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		647DDD883643EA5F803CAADD /* Pods-OCSP_RXPromise.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSP_RXPromise.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OCSP_RXPromise/Pods-OCSP_RXPromise.debug.xcconfig"; sourceTree = "<group>"; };
 		6B7CC13EEAFD423E5901807C /* Pods-OCSPTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSPTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OCSPTests/Pods-OCSPTests.debug.xcconfig"; sourceTree = "<group>"; };
+		815528606040B6E32F26217A /* Pods-OCSP_RXPromise_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSP_RXPromise_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OCSP_RXPromise_Tests/Pods-OCSP_RXPromise_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		8F00CFEEB959008D968509FA /* libPods-OCSPTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OCSPTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BAED30640459F5D2C492CF1 /* libPods-OCSP_RXPromise_Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OCSP_RXPromise_Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0AF509E155682FA9FBA550D /* libPods-OCSP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OCSP.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1C3937FE93FBFE27D266FA5 /* Pods-OCSP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSP.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OCSP/Pods-OCSP.debug.xcconfig"; sourceTree = "<group>"; };
+		A53FA6AE7715400E9A6CF5FC /* Pods-OCSP_RXPromiseTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSP_RXPromiseTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OCSP_RXPromiseTests/Pods-OCSP_RXPromiseTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A98FDA598BA2F8F3941A68A7 /* Pods-OCSP_RXPromise.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSP_RXPromise.release.xcconfig"; path = "Pods/Target Support Files/Pods-OCSP_RXPromise/Pods-OCSP_RXPromise.release.xcconfig"; sourceTree = "<group>"; };
 		BE3EE1102055442C00FA6389 /* OCSPAsyncCondition+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCSPAsyncCondition+Internal.h"; sourceTree = "<group>"; };
 		BE748DEA203D39F600FE6749 /* OCSPAsyncReadWriteChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncReadWriteChannel.h; sourceTree = "<group>"; };
 		BE748DEB203D39F600FE6749 /* OCSPAsyncReadWriteChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncReadWriteChannel.m; sourceTree = "<group>"; };
@@ -83,12 +106,33 @@
 		BE857626202E954800BEBD43 /* OCSPAsyncChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPAsyncChannel.h; sourceTree = "<group>"; };
 		BE857627202E954800BEBD43 /* OCSPAsyncChannel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSPAsyncChannel.m; sourceTree = "<group>"; };
 		BE85762C202EB49E00BEBD43 /* OCSPShortcuts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSPShortcuts.h; sourceTree = "<group>"; };
+		CD0416E7A72BAABBCB90A261 /* Pods-OCSP_RXPromiseTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSP_RXPromiseTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-OCSP_RXPromiseTests/Pods-OCSP_RXPromiseTests.release.xcconfig"; sourceTree = "<group>"; };
+		DF73B676D0AC49C57DF9AE0D /* libPods-OCSP_RXPromiseTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OCSP_RXPromiseTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1067FBE4E23F530DAADD971 /* libPods-OCSP+RXPromise.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OCSP+RXPromise.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBF6148DC60AEA7F592C32ED /* Pods-OCSPTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSPTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-OCSPTests/Pods-OCSPTests.release.xcconfig"; sourceTree = "<group>"; };
 		FED3EE049FE7A8C6C677A235 /* Pods-OCSP+RXPromise.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OCSP+RXPromise.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OCSP+RXPromise/Pods-OCSP+RXPromise.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3D27C843205B4FD900E59CA8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F33CCB9CB25994301318BD28 /* libPods-OCSP_RXPromise.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D27C850205B4FEE00E59CA8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D27C85F205B520C00E59CA8 /* libRXPromise.a in Frameworks */,
+				3D27C85E205B510B00E59CA8 /* libOCSP.a in Frameworks */,
+				3D27C858205B4FEE00E59CA8 /* libOCSP_RXPromise.a in Frameworks */,
+				D7C5D9AE6528580D613A58E2 /* libPods-OCSP_RXPromise_Tests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3DC7363A202D340D00C186EE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -106,14 +150,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3DF4D76F205A8F9200084143 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				70B759675A3B5A90F9877F7B /* libPods-OCSP+RXPromise.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -126,8 +162,32 @@
 				2572E90F571E8974C97F23BA /* Pods-OCSP+RXPromise.release.xcconfig */,
 				6B7CC13EEAFD423E5901807C /* Pods-OCSPTests.debug.xcconfig */,
 				FBF6148DC60AEA7F592C32ED /* Pods-OCSPTests.release.xcconfig */,
+				A53FA6AE7715400E9A6CF5FC /* Pods-OCSP_RXPromiseTests.debug.xcconfig */,
+				CD0416E7A72BAABBCB90A261 /* Pods-OCSP_RXPromiseTests.release.xcconfig */,
+				647DDD883643EA5F803CAADD /* Pods-OCSP_RXPromise.debug.xcconfig */,
+				A98FDA598BA2F8F3941A68A7 /* Pods-OCSP_RXPromise.release.xcconfig */,
+				815528606040B6E32F26217A /* Pods-OCSP_RXPromise_Tests.debug.xcconfig */,
+				589A66E3C8A777B74F77B823 /* Pods-OCSP_RXPromise_Tests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		3D27C847205B4FD900E59CA8 /* OCSP_RXPromise */ = {
+			isa = PBXGroup;
+			children = (
+				3D27C848205B4FD900E59CA8 /* OCSP_RXPromise.h */,
+				3D27C84A205B4FD900E59CA8 /* OCSP_RXPromise.m */,
+			);
+			path = OCSP_RXPromise;
+			sourceTree = "<group>";
+		};
+		3D27C854205B4FEE00E59CA8 /* OCSP_RXPromise_Tests */ = {
+			isa = PBXGroup;
+			children = (
+				3D27C855205B4FEE00E59CA8 /* OCSP_RXPromise_Tests.m */,
+				3D27C857205B4FEE00E59CA8 /* Info.plist */,
+			);
+			path = OCSP_RXPromise_Tests;
 			sourceTree = "<group>";
 		};
 		3DC73634202D340D00C186EE = {
@@ -135,7 +195,8 @@
 			children = (
 				3DC7363F202D340D00C186EE /* OCSP */,
 				3DC7364E202D342500C186EE /* OCSPTests */,
-				3DF4D773205A8F9300084143 /* OCSP+RXPromise */,
+				3D27C847205B4FD900E59CA8 /* OCSP_RXPromise */,
+				3D27C854205B4FEE00E59CA8 /* OCSP_RXPromise_Tests */,
 				3DC7363E202D340D00C186EE /* Products */,
 				039641AA6D8D06B75C56EE02 /* Pods */,
 				D93B26433253548D37062344 /* Frameworks */,
@@ -147,7 +208,8 @@
 			children = (
 				3DC7363D202D340D00C186EE /* libOCSP.a */,
 				3DC7364D202D342500C186EE /* OCSPTests.xctest */,
-				3DF4D772205A8F9200084143 /* libOCSP+RXPromise.a */,
+				3D27C846205B4FD900E59CA8 /* libOCSP_RXPromise.a */,
+				3D27C853205B4FEE00E59CA8 /* OCSP_RXPromise_Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -191,21 +253,16 @@
 			path = OCSPTests;
 			sourceTree = "<group>";
 		};
-		3DF4D773205A8F9300084143 /* OCSP+RXPromise */ = {
-			isa = PBXGroup;
-			children = (
-				3DF4D774205A8F9300084143 /* OCSP_RXPromise.h */,
-				3DF4D776205A8F9300084143 /* OCSP_RXPromise.m */,
-			);
-			path = "OCSP+RXPromise";
-			sourceTree = "<group>";
-		};
 		D93B26433253548D37062344 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D27C860205B520C00E59CA8 /* libRXPromise.a */,
 				F1067FBE4E23F530DAADD971 /* libPods-OCSP+RXPromise.a */,
 				A0AF509E155682FA9FBA550D /* libPods-OCSP.a */,
 				8F00CFEEB959008D968509FA /* libPods-OCSPTests.a */,
+				DF73B676D0AC49C57DF9AE0D /* libPods-OCSP_RXPromiseTests.a */,
+				262C915368E5D2F3BC9A47DC /* libPods-OCSP_RXPromise.a */,
+				9BAED30640459F5D2C492CF1 /* libPods-OCSP_RXPromise_Tests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -213,6 +270,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		3D27C844205B4FD900E59CA8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D27C849205B4FD900E59CA8 /* OCSP_RXPromise.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3DC7363B202D340D00C186EE /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -231,17 +296,49 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3DF4D770205A8F9200084143 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3DF4D775205A8F9300084143 /* OCSP_RXPromise.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		3D27C845205B4FD900E59CA8 /* OCSP_RXPromise */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D27C84C205B4FD900E59CA8 /* Build configuration list for PBXNativeTarget "OCSP_RXPromise" */;
+			buildPhases = (
+				46D9FD5A5089657C8CA071B2 /* [CP] Check Pods Manifest.lock */,
+				3D27C842205B4FD900E59CA8 /* Sources */,
+				3D27C843205B4FD900E59CA8 /* Frameworks */,
+				3D27C844205B4FD900E59CA8 /* Headers */,
+				21A54E18030B08E08950C39B /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OCSP_RXPromise;
+			productName = OCSP_RXPromise;
+			productReference = 3D27C846205B4FD900E59CA8 /* libOCSP_RXPromise.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		3D27C852205B4FEE00E59CA8 /* OCSP_RXPromise_Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D27C85B205B4FEE00E59CA8 /* Build configuration list for PBXNativeTarget "OCSP_RXPromise_Tests" */;
+			buildPhases = (
+				F3E0D6F3BF9FDEC279BA34F2 /* [CP] Check Pods Manifest.lock */,
+				3D27C84F205B4FEE00E59CA8 /* Sources */,
+				3D27C850205B4FEE00E59CA8 /* Frameworks */,
+				3D27C851205B4FEE00E59CA8 /* Resources */,
+				4E91B386D20E2F16DF9A94A5 /* [CP] Embed Pods Frameworks */,
+				2DC2B64C82942628E1E31C5D /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3D27C85A205B4FEE00E59CA8 /* PBXTargetDependency */,
+			);
+			name = OCSP_RXPromise_Tests;
+			productName = OCSP_RXPromise_Tests;
+			productReference = 3D27C853205B4FEE00E59CA8 /* OCSP_RXPromise_Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		3DC7363C202D340D00C186EE /* OCSP */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3DC73646202D340D00C186EE /* Build configuration list for PBXNativeTarget "OCSP" */;
@@ -282,25 +379,6 @@
 			productReference = 3DC7364D202D342500C186EE /* OCSPTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		3DF4D771205A8F9200084143 /* OCSP+RXPromise */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3DF4D77A205A8F9300084143 /* Build configuration list for PBXNativeTarget "OCSP+RXPromise" */;
-			buildPhases = (
-				6994F41C772EDF49D6AA038C /* [CP] Check Pods Manifest.lock */,
-				3DF4D76E205A8F9200084143 /* Sources */,
-				3DF4D76F205A8F9200084143 /* Frameworks */,
-				3DF4D770205A8F9200084143 /* Headers */,
-				C0DCBAD9BE9D1D28757EC7C0 /* [CP] Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "OCSP+RXPromise";
-			productName = "OCSP+RXPromise";
-			productReference = 3DF4D772205A8F9200084143 /* libOCSP+RXPromise.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -310,6 +388,14 @@
 				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = coppercash;
 				TargetAttributes = {
+					3D27C845205B4FD900E59CA8 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+					3D27C852205B4FEE00E59CA8 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					3DC7363C202D340D00C186EE = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 0900;
@@ -318,10 +404,6 @@
 					3DC7364C202D342500C186EE = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 0900;
-						ProvisioningStyle = Automatic;
-					};
-					3DF4D771205A8F9200084143 = {
-						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -340,12 +422,20 @@
 			targets = (
 				3DC7363C202D340D00C186EE /* OCSP */,
 				3DC7364C202D342500C186EE /* OCSPTests */,
-				3DF4D771205A8F9200084143 /* OCSP+RXPromise */,
+				3D27C845205B4FD900E59CA8 /* OCSP_RXPromise */,
+				3D27C852205B4FEE00E59CA8 /* OCSP_RXPromise_Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3D27C851205B4FEE00E59CA8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3DC7364B202D342500C186EE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -356,6 +446,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		21A54E18030B08E08950C39B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OCSP_RXPromise/Pods-OCSP_RXPromise-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2DC2B64C82942628E1E31C5D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OCSP_RXPromise_Tests/Pods-OCSP_RXPromise_Tests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		34B627E405B863D845E6029B /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -371,6 +491,39 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OCSPTests/Pods-OCSPTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		46D9FD5A5089657C8CA071B2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OCSP_RXPromise-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4E91B386D20E2F16DF9A94A5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OCSP_RXPromise_Tests/Pods-OCSP_RXPromise_Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		6948BD4B8CFC5CFCA6CF7CE8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -383,24 +536,6 @@
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-OCSPTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6994F41C772EDF49D6AA038C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OCSP+RXPromise-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -437,19 +572,22 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OCSP/Pods-OCSP-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C0DCBAD9BE9D1D28757EC7C0 /* [CP] Copy Pods Resources */ = {
+		F3E0D6F3BF9FDEC279BA34F2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OCSP_RXPromise_Tests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OCSP+RXPromise/Pods-OCSP+RXPromise-resources.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FEEB908B0BD79F6CC287422E /* [CP] Check Pods Manifest.lock */ = {
@@ -473,6 +611,22 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3D27C842205B4FD900E59CA8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D27C84B205B4FD900E59CA8 /* OCSP_RXPromise.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D27C84F205B4FEE00E59CA8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D27C856205B4FEE00E59CA8 /* OCSP_RXPromise_Tests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3DC73639202D340D00C186EE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -497,17 +651,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3DF4D76E205A8F9200084143 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3DF4D777205A8F9300084143 /* OCSP_RXPromise.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3D27C85A205B4FEE00E59CA8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D27C845205B4FD900E59CA8 /* OCSP_RXPromise */;
+			targetProxy = 3D27C859205B4FEE00E59CA8 /* PBXContainerItemProxy */;
+		};
 		3DC73654202D342500C186EE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3DC7363C202D340D00C186EE /* OCSP */;
@@ -516,6 +667,76 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		3D27C84D205B4FD900E59CA8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 647DDD883643EA5F803CAADD /* Pods-OCSP_RXPromise.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(PROJECT_DIR)\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/RXPromise\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3D27C84E205B4FD900E59CA8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A98FDA598BA2F8F3941A68A7 /* Pods-OCSP_RXPromise.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(PROJECT_DIR)\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/RXPromise\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		3D27C85C205B4FEE00E59CA8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 815528606040B6E32F26217A /* Pods-OCSP_RXPromise_Tests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(PROJECT_DIR)\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/RXPromise\"",
+				);
+				INFOPLIST_FILE = OCSP_RXPromise_Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.coppercash.OCSP-RXPromise-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3D27C85D205B4FEE00E59CA8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 589A66E3C8A777B74F77B823 /* Pods-OCSP_RXPromise_Tests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(PROJECT_DIR)\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/RXPromise\"",
+				);
+				INFOPLIST_FILE = OCSP_RXPromise_Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.coppercash.OCSP-RXPromise-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		3DC73644202D340D00C186EE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -655,7 +876,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				HEADER_SEARCH_PATHS = "\"$(PROJECT_DIR)\"";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(PROJECT_DIR)\"",
+				);
 				INFOPLIST_FILE = OCSPTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.coppercash.OCSPTests;
@@ -673,7 +897,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				HEADER_SEARCH_PATHS = "\"$(PROJECT_DIR)\"";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(PROJECT_DIR)\"",
+				);
 				INFOPLIST_FILE = OCSPTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.coppercash.OCSPTests;
@@ -683,41 +910,27 @@
 			};
 			name = Release;
 		};
-		3DF4D778205A8F9300084143 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = FED3EE049FE7A8C6C677A235 /* Pods-OCSP+RXPromise.debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(PROJECT_DIR)\"",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/RXPromise\"",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		3DF4D779205A8F9300084143 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2572E90F571E8974C97F23BA /* Pods-OCSP+RXPromise.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(PROJECT_DIR)\"",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/RXPromise\"",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3D27C84C205B4FD900E59CA8 /* Build configuration list for PBXNativeTarget "OCSP_RXPromise" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D27C84D205B4FD900E59CA8 /* Debug */,
+				3D27C84E205B4FD900E59CA8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D27C85B205B4FEE00E59CA8 /* Build configuration list for PBXNativeTarget "OCSP_RXPromise_Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D27C85C205B4FEE00E59CA8 /* Debug */,
+				3D27C85D205B4FEE00E59CA8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		3DC73638202D340D00C186EE /* Build configuration list for PBXProject "OCSP" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -741,15 +954,6 @@
 			buildConfigurations = (
 				3DC73656202D342500C186EE /* Debug */,
 				3DC73657202D342500C186EE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3DF4D77A205A8F9300084143 /* Build configuration list for PBXNativeTarget "OCSP+RXPromise" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3DF4D778205A8F9300084143 /* Debug */,
-				3DF4D779205A8F9300084143 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

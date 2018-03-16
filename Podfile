@@ -14,10 +14,16 @@ target 'OCSP' do
 
 end
 
-target 'OCSP+RXPromise' do
+target 'OCSP_RXPromise' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
 
   # Pods for OCSP+RXPromise
   pod 'RXPromise', '~> 1.0'
+
+  target 'OCSP_RXPromise_Tests' do
+    inherit! :search_paths
+    # Pods for testing
+    pod 'RXPromise', '~> 1.0'
+  end
 end

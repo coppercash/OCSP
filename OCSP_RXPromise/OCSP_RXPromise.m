@@ -17,7 +17,7 @@ id Data;
 @implementation
 OCSPAsyncChannel (RXPromise)
 
-- (RXPromise *)rx_receive
+- (RXPromise *)orx_receive
 {
     __auto_type const
     promise = [[RXPromise alloc] init];
@@ -37,7 +37,7 @@ OCSPAsyncChannel (RXPromise)
 @implementation
 OCSPAsyncReadWriteChannel (RXPromise)
 
-- (RXPromise *)rx_send:(Data)data
+- (RXPromise *)orx_send:(Data)data
 {
     __auto_type const
     promise = [[RXPromise alloc] init];
@@ -116,6 +116,15 @@ OCSPRXSelectionBuilder
 }
 - (NSMutableArray<OCSPRXSelectionTry *> *)tries { return _tries; }
 
+- (instancetype)init
+{
+    if (!(
+          self = [super init]
+          )) { return nil; }
+    _tries = [[NSMutableArray alloc] init];
+    return self;
+}
+
 - (OCSPRXSelectionBuilder *(^)(OCSPAsyncChannel *))receive
 {
     __auto_type const __unsafe_unretained
@@ -152,7 +161,7 @@ OCSPRXSelectionBuilder
     builder = self;
     return ^{
         [builder.tries addObject:
-         [[OCSPRXSelectionTry alloc] initWithType:OCSPRXSelectionTryTypeSend
+         [[OCSPRXSelectionTry alloc] initWithType:OCSPRXSelectionTryTypeDefault
                                           channel:nil
                                              data:nil
           ]
@@ -196,7 +205,6 @@ OCSRXSelectionResult
 
 // MARK: - OCSPRXSelect
 
-const
 RXPromise *(^OCSPRXSelect)(OCSPRXSelectionBuildup) =
 ^RXPromise *(OCSPRXSelectionBuildup buildup) {
     __auto_type const
@@ -257,4 +265,11 @@ RXPromise *(^OCSPRXSelect)(OCSPRXSelectionBuildup) =
         }
     });
     return promise;
+};
+
+// MARK: - Shortcuts
+
+RXPromise *(^ORXSelect)(OCSPRXSelectionBuildup) =
+^RXPromise *(OCSPRXSelectionBuildup buildup) {
+    return OCSPRXSelect(buildup);
 };
