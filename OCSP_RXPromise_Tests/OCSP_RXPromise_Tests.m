@@ -23,7 +23,7 @@
     value = @0;
     __auto_type const
     r = [self expectationWithDescription:@"r"];
-    [chan orx_receive]
+    chan.orx_receive()
     .then(^id(NSNumber *data) {
         value = data;
         [r fulfill];
@@ -45,7 +45,7 @@
     chan = [[ARWChan alloc] init];
     __auto_type const
     s = [self expectationWithDescription:@"s"];
-    [chan orx_send:@42]
+    chan.orx_send(@42)
     .then(^id(id _) {
         [s fulfill];
         return nil;

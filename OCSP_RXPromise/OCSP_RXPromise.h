@@ -15,12 +15,12 @@ RXPromise;
 
 @interface
 OCSPAsyncChannel<__covariant Data> (RXPromise)
-- (RXPromise *)orx_receive;
+@property (readonly) RXPromise *(^orx_receive)(void);
 @end
 
 @interface
 OCSPAsyncReadWriteChannel<__covariant Data> (RXPromise)
-- (RXPromise *)orx_send:(Data __nullable)data;
+@property (readonly) RXPromise *(^orx_send)(Data __nullable data);
 @end
 
 @interface

@@ -62,46 +62,37 @@
 - (void)test_rx
 {
     __auto_type const
-    chan = [[ARWChan<NSNumber *> alloc] init];
-    [chan orx_send:@42]
-    .then(^id(id _) {
-        NSLog(@"The answer has been received!");
-        return nil;
-    }, nil);
-    
-    [chan orx_receive]
-    .then(^id(NSNumber *answer) {
-        NSLog(@"Got the ultimate answer %@", answer);
-        return nil;
-    }, nil);
-}
+    boss = [[ARWChan<NSString *> alloc] init];
+    __auto_type const
+    colleague = [[ARWChan<NSString *> alloc] init];
+    __auto_type const
+    guys = [[ARWChan<NSString *> alloc] init];
+    __auto_type const
+    bar = [[ARWChan<NSString *> alloc] init];
+    __auto_type const
+    cafe = [[ARWChan<NSString *> alloc] init];
 
-- (void)test_rx_select
-{
-    __auto_type const
-    receiving = [[ARWChan<NSNumber *> alloc] init];
-    __auto_type const
-    sending = [[ARWChan<NSNumber *> alloc] init];
-    
-    ORXSelect(^(ORXSelecting *_) { _
-        .receive(receiving)
-        .send(@42, sending)
-        .default_()
-        ;
-    })
+    [RXPromise promiseWithResult:nil]
+    .then(^id(id _) {
+        return
+        ORXSelect(^(ORXSelecting *_) { _
+            .receive(boss)
+            .receive(guys)
+            .default_()
+            ;
+        });
+    }, nil)
     .then(^id(ORXSelected *_) {
         switch (_.index) {
             case 0:
-                NSLog(@"Continue with the received value.");
-                return nil;
+                return colleague.orx_send(@"email");
             case 1:
-                NSLog(@"Continue with the sent value.");
-                return nil;
+                return bar.orx_send(@"myself");
             default:
-                NSLog(@"Continue anyway.");
-                return nil;
+                return cafe.orx_send(@"coding");
         }
-    }, nil);
+    }, nil)
+    ;
 }
 
 @end

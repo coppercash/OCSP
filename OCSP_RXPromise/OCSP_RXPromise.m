@@ -17,17 +17,21 @@ id Data;
 @implementation
 OCSPAsyncChannel (RXPromise)
 
-- (RXPromise *)orx_receive
+- (RXPromise *(^)(void))orx_receive
 {
-    __auto_type const
-    promise = [[RXPromise alloc] init];
-    [self receive:
-     ^(Data data, BOOL ok) {
-         ok ?
-         [promise fulfillWithValue:data] :
-         [promise rejectWithReason:OCSPRXChannelError.closed];
-     }];
-    return promise;
+    __auto_type const __unsafe_unretained
+    channel = self;
+    return ^RXPromise *(void) {
+        __auto_type const
+        promise = [[RXPromise alloc] init];
+        [channel receive:
+         ^(Data data, BOOL ok) {
+             ok ?
+             [promise fulfillWithValue:data] :
+             [promise rejectWithReason:OCSPRXChannelError.closed];
+         }];
+        return promise;
+    };
 }
 
 @end
@@ -37,18 +41,22 @@ OCSPAsyncChannel (RXPromise)
 @implementation
 OCSPAsyncReadWriteChannel (RXPromise)
 
-- (RXPromise *)orx_send:(Data)data
+- (RXPromise *(^)(Data))orx_send
 {
-    __auto_type const
-    promise = [[RXPromise alloc] init];
-    [self send:data
-          with:
-     ^(BOOL ok) {
-         ok ?
-         [promise fulfillWithValue:nil] :
-         [promise rejectWithReason:OCSPRXChannelError.closed];
-     }];
-    return promise;
+    __auto_type const __unsafe_unretained
+    channel = self;
+    return ^RXPromise *(Data data) {
+        __auto_type const
+        promise = [[RXPromise alloc] init];
+        [channel send:data
+                 with:
+         ^(BOOL ok) {
+             ok ?
+             [promise fulfillWithValue:nil] :
+             [promise rejectWithReason:OCSPRXChannelError.closed];
+         }];
+        return promise;
+    };
 }
 
 @end
